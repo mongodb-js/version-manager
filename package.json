@@ -1,0 +1,23 @@
+{
+  "name": "mongodb-version-manager",
+  "version": "0.0.0",
+  "description": "Cross-platform helper for managing and installing MongoDB",
+  "bin": {
+    "mvm": "bin/mongodb-version-manager.js"
+  },
+  "devDependencies": {
+    "mocha": "^1.20.1"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "cheerio": "^0.17.0",
+    "debug": "^1.0.4",
+    "fs-extra": "^0.10.0",
+    "request": "^2.37.0",
+    "semver": "^2.3.1",
+    "tar": "^0.1.20",
+    "untildify": "^0.1.0",
+    "which": "^1.0.5",
+    "yargs": "^1.2.6"
+  }
+}

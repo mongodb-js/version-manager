@@ -1,0 +1,22 @@
+{
+  "eqeqeq": true,
+  "node": true,
+  "browser": true,
+  "newcap": true,
+  "predef": [
+    "describe",
+    "it",
+    "before",
+    "beforeEach",
+    "after",
+    "afterEach"
+  ],
+  "indent": "2",
+  "unused": true,
+  "trailing": true,
+  "loopfunc": true,
+  "undef": true,
+  "quotmark": "single",
+  "maxlen": 80,
+  "multistr": true
+}
