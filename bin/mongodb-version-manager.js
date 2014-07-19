@@ -12,6 +12,8 @@ var mvm = require('../'),
     .example('m stable [config]', 'Install or activate the latest stable MongoDB release')
     .example('m latest [config]', 'Install or activate the latest unstable MongoDB release')
     .example('m <version> [config]', 'Install or activate MongoDB <version>')
+    .example('m shell', 'Open a MongoDB shell')
+    .example('m d', 'Start mongod in the foreground')
     .example('m --version="2.4.*"', 'Print latest 2.4 series version')
 
     ,
@@ -30,12 +32,13 @@ if(version){
   });
 }
 else if(argv._[0] && (argv._[0] !== 'ls')){
+  var which = require('which');
   if(argv._[0] === 'shell'){
-    return console.error('@todo');
+    return require('child_process').spawn(which.sync('mongo'), {stdio: 'inherit'});
   }
 
   if(argv._[0] === 'd'){
-    return console.error('@todo');
+    return require('child_process').spawn(which.sync('mongod'), {stdio: 'inherit'});
   }
 
   mvm.use(argv._[0], function(err){
