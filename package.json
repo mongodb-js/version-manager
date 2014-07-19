@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Cross-platform helper for managing and installing MongoDB",
   "bin": {
-    "mvm": "bin/mongodb-version-manager.js"
+    "m": "bin/mongodb-version-manager.js"
   },
   "scripts": {
     "test": "mocha"

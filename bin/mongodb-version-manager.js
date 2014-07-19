@@ -7,12 +7,12 @@ var mvm = require('../'),
     .describe('unstable', 'Print latest unstable version of MongoDB')
     .describe('version', 'Any semver version string or query')
     .describe('url', 'Print the download URL')
-    .example('$0 --stable --url', 'Print download URL for the latest stable version')
-    .example('$0 --unstable', 'Print latest unstable version')
-    .example('$0 stable [config]', 'Install or activate the latest stable MongoDB release')
-    .example('$0 latest [config]', 'Install or activate the latest unstable MongoDB release')
-    .example('$0 <version> [config]', 'Install or activate MongoDB <version>')
-    .example('$0 --version="2.4.*"', 'Print latest 2.4 series version')
+    .example('m --stable --url', 'Print download URL for the latest stable version')
+    .example('m --unstable', 'Print latest unstable version')
+    .example('m stable [config]', 'Install or activate the latest stable MongoDB release')
+    .example('m latest [config]', 'Install or activate the latest unstable MongoDB release')
+    .example('m <version> [config]', 'Install or activate MongoDB <version>')
+    .example('m --version="2.4.*"', 'Print latest 2.4 series version')
 
     ,
   argv = yargs.argv;
@@ -24,13 +24,21 @@ if(argv.stable) version = 'stable';
 if(argv.unstable) version = 'unstable';
 
 if(version){
-  return mvm.resolve(version, function(err, v){
+  mvm.resolve(version, function(err, v){
     if(err) return console.error(err);
     console.log(argv.url ? v.url : v.version);
   });
 }
 else if(argv._[0] && (argv._[0] !== 'ls')){
-  return mvm.use(argv._[0], function(err){
+  if(argv._[0] === 'shell'){
+    return console.error('@todo');
+  }
+
+  if(argv._[0] === 'd'){
+    return console.error('@todo');
+  }
+
+  mvm.use(argv._[0], function(err){
     if(err) return console.error(err);
     mvm.current(function(err, v){
       if(err) return console.error(err);
