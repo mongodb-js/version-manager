@@ -17,6 +17,10 @@ if(process.env.PATH.indexOf(bin) === -1){
   process.env.PATH = bin + ':' + process.env.PATH;
 }
 
+module.exports.path = function(fn){
+  fn(null, path.resolve(path.current({name: 'mongodb'}) + '/bin'));
+};
+
 module.exports.installed = function(fn){
   fs.readdir(path.base({name: 'mongodb'}), function(err, files){
     if(err) return fn(err);
