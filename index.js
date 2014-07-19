@@ -44,6 +44,13 @@ module.exports.versions = function(fn){
   });
 };
 
+module.exports.is = function(s, fn){
+  var semver = require('semver');
+  module.exports.current(function(err, v){
+    fn(null, semver.satisfies(v, s));
+  });
+};
+
 module.exports.current = function(fn){
   exec(which.sync('mongod') +' --version', function(err, stdout){
     if(err) return fn(err);
