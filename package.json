@@ -1,6 +1,6 @@
 {
   "name": "mongodb-version-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Cross-platform helper for managing and installing MongoDB",
   "bin": {
     "m": "bin/mongodb-version-manager.js"
