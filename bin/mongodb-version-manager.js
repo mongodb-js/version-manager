@@ -39,6 +39,15 @@ else if(argv._[0] && (argv._[0] !== 'ls')){
       console.log(p);
     });
   }
+  if(argv._[0] === 'kill'){
+    return mvm.kill(function(){});
+  }
+  if(argv._[0] === 'is'){
+    argv._.shift();
+    return mvm.is(argv._.join(' '), function(err, res){
+      process.exit(res === true ? 0 : 1);
+    });
+  }
   if(argv._[0] === 'shell'){
     return require('child_process').spawn(which.sync('mongo'), {stdio: 'inherit'});
   }

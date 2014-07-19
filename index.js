@@ -1,5 +1,6 @@
 var async = require('async'),
   which = require('which'),
+  windows = require('os').platform() === 'win32',
   exec = require('child_process').exec,
   resolve = require('./lib').resolve,
   path = require('./lib').path,
@@ -44,6 +45,17 @@ module.exports.versions = function(fn){
   });
 };
 
+module.exports.kill = function(fn){
+  async.parallel(['mongod', 'mongo', 'mongos'].map(function(name){
+    var cmd = (windows) ? 'taskkill /F /IM '+name+'.exe' : 'killall -9 ' + name;
+    return function(cb){
+      exec(cmd, function(){
+        cb();
+      });
+    };
+  }), fn);
+};
+
 module.exports.is = function(s, fn){
   var semver = require('semver');
   module.exports.current(function(err, v){
@@ -66,10 +78,16 @@ module.exports.install = function(version, fn){
 
 module.exports.use = function(version, fn){
   resolve({version: version}, function(err, pkg){
-    async.series([
-      download.bind(null, pkg),
-      extract.bind(null, pkg),
-      activate.bind(null, pkg)
-    ], fn);
+    module.exports.current(function(err, v){
+      if(pkg.version === v){
+        console.log('already using ' + v);
+        return fn();
+      }
+      async.series([
+        download.bind(null, pkg),
+        extract.bind(null, pkg),
+        activate.bind(null, pkg)
+      ], fn);
+    });
   });
 };
