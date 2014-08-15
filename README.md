@@ -14,6 +14,32 @@ m 2.6.x && npm test && mongod --version
 m 2.4.x && npm test && mongod --version
 ```
 
+
+## Testing multiple versions of MongoDB with travisci
+
+With a `.travis.yml` like
+
+```
+language: node_js
+node_js:
+  - "0.10"
+env:
+  - DEBUG=* MONGODB_VERSION=2.4.x
+  - DEBUG=* MONGODB_VERSION=2.6.x
+  - DEBUG=* MONGODB_VERSION=2.7.x
+```
+
+Add `mongodb-version-manager` to your devDependencies and a `test` script in
+your package.json like
+
+```
+"test": "m kill && m ${MONGODB_VERSION} && mocha",
+```
+
+Now you'll have a sweet [matrix build on travis](https://travis-ci.org/imlucas/mongodb-runner)
+
+![mongodb matrix build](https://i.cloudup.com/kv3VmH1zKO-2000x2000.png)
+
 ## License
 
 MIT
