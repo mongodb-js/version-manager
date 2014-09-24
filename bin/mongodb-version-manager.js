@@ -5,11 +5,11 @@ var mvm = require('../'),
   fs = require('fs'),
   docopt = require('docopt').docopt,
   pkg = require('../package.json'),
-  argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {version: pkg.version});
+  argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {version: pkg.version}),
+  spawn = require('child_process').spawn;
 
 var COMMANDS = ['use', 'shell', 'path', 'd', 'show', 'kill'];
-var cmd,
-  args = [];
+var cmd;
 
 for(var i=0; i < COMMANDS.length; i++){
   if(argv[COMMANDS[i]] === true){
@@ -21,14 +21,18 @@ if(argv['<v>']){
   if(!cmd){
     cmd = 'show';
   }
-  args.push(argv['<v>']);
 }
 else if(!cmd){
   cmd = 'ls';
 }
 
+var opts = {
+  version: argv['<v>'],
+  branch: argv['--branch']
+};
+
 if(cmd === 'show'){
-  return mvm.resolve(args[0], function(err, v){
+  return mvm.resolve(opts, function(err, v){
     if(err) return console.error(err);
     console.log(argv['--url'] ? v.url : v.version);
   });
@@ -42,13 +46,13 @@ else if(cmd === 'kill'){
   return mvm.kill(function(){});
 }
 else if(cmd === 'shell'){
-  return require('child_process').spawn(which.sync('mongo'), {stdio: 'inherit'});
+  return spawn(which.sync('mongo'), {stdio: 'inherit'});
 }
 else if(cmd === 'd'){
-  return require('child_process').spawn(which.sync('mongod'), {stdio: 'inherit'});
+  return spawn(which.sync('mongod'), {stdio: 'inherit'});
 }
 else if(cmd === 'use'){
-  mvm.use(args[0], function(err){
+  mvm.use(opts, function(err){
     if(err) return console.error(err);
     mvm.current(function(err, v){
       if(err) return console.error(err);

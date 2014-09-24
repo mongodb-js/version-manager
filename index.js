@@ -30,8 +30,8 @@ module.exports.installed = function(fn){
   });
 };
 
-module.exports.resolve = function(s, fn){
-  resolve({version: s}, fn);
+module.exports.resolve = function(opts, fn){
+  resolve(opts, fn);
 };
 
 module.exports.versions = function(fn){
@@ -75,8 +75,8 @@ module.exports.install = function(version, fn){
   });
 };
 
-module.exports.use = function(version, fn){
-  resolve({version: version}, function(err, pkg){
+module.exports.use = function(opts, fn){
+  resolve(opts, function(err, pkg){
     module.exports.current(function(err, v){
       if(pkg.version === v){
         console.log('already using ' + v);
