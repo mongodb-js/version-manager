@@ -7,18 +7,19 @@ Usage:
   m shell [<v>]
   m path [<v>]
   m d [<v>]
-  m [<v> --url]
+  m [<v> --url --branch=<branch>]
   m kill
   m ls
 
 Examples:
-  m <version>            # Install or activate MongoDB <version>
-  m shell                # Open a MongoDB shell
-  m path                 # Print the absolute path to the current MongoDB version
-  m d                    # Start mongod in the foreground
-  m 2.4.x                # Print latest 2.4 series version
-  m stable --url         # Print download URL for the latest stable version
-  m unstable             # Print latest unstable version
+  m <version>                    # Install or activate MongoDB <version>
+  m shell                        # Open a MongoDB shell
+  m path                         # Print the absolute path to the current MongoDB version
+  m d                            # Start mongod in the foreground
+  m 2.4.x                        # Print latest 2.4 series version
+  m stable --url                 # Print download URL for the latest stable version
+  m unstable                     # Print latest unstable version
+  m 2ce51c8e0d4bf84589bffa87e59f2401578c2572 --url # Download URL for mci artifact at a specific commit
 
 Options:
   -h --help     Show this screen.
