@@ -8,8 +8,7 @@ var async = require('async'),
   download = require('./lib').download,
   extract = require('./lib').extract,
   versions = require('./lib').versions,
-  fs = require('fs-extra'),
-  debug = require('debug')('mvm');
+  fs = require('fs-extra');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
