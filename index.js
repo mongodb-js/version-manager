@@ -2,13 +2,14 @@ var async = require('async'),
   which = require('which'),
   windows = require('os').platform() === 'win32',
   exec = require('child_process').exec,
-  resolve = require('./lib').resolve,
-  path = require('./lib').path,
-  activate = require('./lib').activate,
-  download = require('./lib').download,
-  extract = require('./lib').extract,
-  versions = require('./lib').versions,
-  fs = require('fs-extra');
+  fs = require('fs-extra'),
+  resolve = require('./lib/resolve'),
+  path = require('./lib/path'),
+  config = require('./lib/config'),
+  activate = require('./lib/activate'),
+  download = require('./lib/download'),
+  extract = require('./lib/extract'),
+  versions = require('./lib/versions');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
@@ -17,13 +18,17 @@ if(process.env.PATH.indexOf(bin) === -1){
   process.env.PATH = bin + ':' + process.env.PATH;
 }
 
+
+module.exports.config = config;
 module.exports.path = function(fn){
   fn(null, path.resolve(path.current({name: 'mongodb'}) + '/bin'));
 };
 
 module.exports.installed = function(fn){
   fs.readdir(path.base({name: 'mongodb'}), function(err, files){
-    if(err) return fn(err);
+    if(err){
+      return fn(null, []);
+    }
     fn(null, files.filter(function(f){
       return VERSION.test(f);
     }));
