@@ -43,7 +43,3 @@ Now you'll have a sweet [matrix build on travis](https://travis-ci.org/imlucas/m
 ## License
 
 MIT
-
-## Todo
-
-- Pull binaries from MCI https://s3.amazonaws.com/mciuploads/mongodb-mongo-master/linux-#{bits}/#{commit}/binaries/mongo-mongodb_mongo_master_linux_#{bits}_#{commit}_#{ts}.(tgz|zip)
