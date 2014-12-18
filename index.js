@@ -9,7 +9,8 @@ var async = require('async'),
   activate = require('./lib/activate'),
   download = require('./lib/download'),
   extract = require('./lib/extract'),
-  versions = require('./lib/versions');
+  versions = require('./lib/versions'),
+  debug = require('debug')('mongodb-version-manager');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
@@ -18,6 +19,22 @@ if(process.env.PATH.indexOf(bin) === -1){
   process.env.PATH = bin + ':' + process.env.PATH;
 }
 
+module.exports = function(opts, fn){
+  if(typeof opts === 'function'){
+    fn = opts;
+    opts = {};
+  }
+  else if(typeof opts === 'string'){
+    opts = {version: opts};
+  }
+  opts.version = opts.version || process.env.MONGODB_VERSION;
+
+  module.exports.kill(function(err){
+    if(err) return fn(err);
+
+    module.exports.use(opts, fn);
+  });
+};
 
 module.exports.config = config;
 module.exports.path = function(fn){
@@ -81,17 +98,28 @@ module.exports.install = function(version, fn){
 };
 
 module.exports.use = function(opts, fn){
+  if(!opts.version){
+    var existing = which.sync('mongod');
+    debug('noop. using existing mongo install at %s', existing);
+    return process.nextTick(function(){
+      fn(null, null);
+    });
+  }
+
   resolve(opts, function(err, pkg){
     module.exports.current(function(err, v){
       if(pkg.version === v){
-        console.log('already using ' + v);
+        debug('already using ' + v);
         return fn();
       }
       async.series([
         download.bind(null, pkg),
         extract.bind(null, pkg),
         activate.bind(null, pkg)
-      ], fn);
+      ], function(err){
+        if(err) return fn(err);
+        return fn(null, pkg);
+      });
     });
   });
 };
