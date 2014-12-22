@@ -7,7 +7,6 @@ var mvm = require('../'),
   pkg = require('../package.json'),
   argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {version: pkg.version}),
   spawn = require('child_process').spawn,
-  chalk = require('chalk'),
   without = require('lodash.without'),
   pluck = require('lodash.pluck');
 
@@ -120,13 +119,13 @@ var commands = {
         });
       }
 
-      console.log('  '+chalk.yellow('0 versions installed.  Run one of:'));
+      console.log('0 versions installed.  Run one of:');
 
       mvm.resolve([{version: 'unstable'}, {version: 'stable'}], function(err, data){
         if(err) return abort(err);
 
-        console.log('    m use stable' + chalk.gray('; # installs MongoDB v' + data.stable.version));
-        console.log('    m use unstable' + chalk.gray('; # installs MongoDB v' + data.unstable.version));
+        console.log('    m use stable; # installs MongoDB v' + data.stable.version);
+        console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
       });
     });
   }
