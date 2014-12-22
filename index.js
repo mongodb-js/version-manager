@@ -10,6 +10,9 @@ var async = require('async'),
   download = require('./lib/download'),
   extract = require('./lib/extract'),
   versions = require('./lib/versions'),
+  pluck = require('lodash.pluck'),
+  defaults = require('lodash.defaults'),
+  semver = require('semver'),
   debug = require('debug')('mongodb-version-manager');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
@@ -43,9 +46,9 @@ module.exports.path = function(fn){
 
 module.exports.installed = function(fn){
   fs.readdir(path.base({name: 'mongodb'}), function(err, files){
-    if(err){
-      return fn(null, []);
-    }
+    files = files || [];
+    if(err) return fn(null, files);
+
     fn(null, files.filter(function(f){
       return VERSION.test(f);
     }));
@@ -56,13 +59,39 @@ module.exports.resolve = function(opts, fn){
   resolve(opts, fn);
 };
 
-module.exports.versions = function(fn){
+module.exports.is = function(s, fn){
+  module.exports.current(function(err, v){
+    fn(null, semver.satisfies(v, s));
+  });
+};
+
+module.exports.available = function(opts, fn){
+   defaults((opts || {}), {
+    stable: false,
+    unstable: false,
+    rc: false,
+  });
+
+   debug('options for avilable', opts);
   versions(function(err, res){
     if(err) return fn(err);
+    res = res.map(function(v){
+      return semver.parse(v);
+    })
+    .filter(function(v){
+      v.stable = (v.minor % 2) === 0;
+      v.unstable = !v.stable;
+      v.rc = v.prerelease.length > 0;
 
-    fn(null, res.map(function(v){
+      if(!opts.rc && v.rc) return false;
+      if(!opts.stable && v.stable) return false;
+      if(!opts.unstable && v.unstable) return false;
+      return true;
+    })
+    .map(function(v){
       return v.version;
-    }));
+    });
+    fn(null, res);
   });
 };
 
@@ -78,7 +107,6 @@ module.exports.kill = function(fn){
 };
 
 module.exports.is = function(s, fn){
-  var semver = require('semver');
   module.exports.current(function(err, v){
     fn(null, semver.satisfies(v, s));
   });
@@ -87,7 +115,12 @@ module.exports.is = function(s, fn){
 module.exports.current = function(fn){
   exec(which.sync('mongod') +' --version', function(err, stdout){
     if(err) return fn(err);
-    fn(null, VERSION.exec(stdout.toString('utf-8'))[0]);
+    fn(null, VERSION.exec(stdout
+      .toString('utf-8')
+      .split('\n')[0]
+      .split(',')[0]
+      .replace('db version v', '')
+    ));
   });
 };
 
