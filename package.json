@@ -23,6 +23,7 @@
     "cheerio": "~0.17.0",
     "debug": "~1.0.4",
     "docopt": "~0.4.0",
+    "downcache": "0.0.5-a",
     "fs-extra": "~0.10.0",
     "lodash.defaults": "~2.4.1",
     "lodash.pluck": "~2.4.1",
