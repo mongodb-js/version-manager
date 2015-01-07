@@ -115,12 +115,15 @@ module.exports.is = function(s, fn){
 module.exports.current = function(fn){
   exec(which.sync('mongod') +' --version', function(err, stdout){
     if(err) return fn(err);
-    fn(null, VERSION.exec(stdout
+
+    var shellVersion = stdout
       .toString('utf-8')
       .split('\n')[0]
       .split(',')[0]
-      .replace('db version v', '')
-    ));
+      .replace('db version v', '');
+
+    console.log('shellVersion', shellVersion);
+    fn(null, shellVersion);
   });
 };
 
