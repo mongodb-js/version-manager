@@ -122,7 +122,6 @@ module.exports.current = function(fn){
       .split(',')[0]
       .replace('db version v', '');
 
-    console.log('shellVersion', shellVersion);
     fn(null, shellVersion);
   });
 };
