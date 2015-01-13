@@ -7,8 +7,8 @@ var mvm = require('../'),
   pkg = require('../package.json'),
   argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {version: pkg.version}),
   spawn = require('child_process').spawn,
-  without = require('lodash.without'),
-  pluck = require('lodash.pluck');
+  _ = require('underscore'),
+  debug = require('debug')('mongodb-version-manager');
 
 function printVersions(versions, fn){
   mvm.current(function(err, current){
@@ -27,18 +27,11 @@ function printVersions(versions, fn){
   });
 }
 
-var abort = function(err){
-  console.error(err);
-  process.exit(1);
+var abortIfError = function(err){
+  if(err) return console.error(err) && process.exit(1);
 };
 
 var commands = {
-  show: function(opts){
-    mvm.resolve(opts, function(err, v){
-      if(err) return abort(err);
-      console.log(argv['--url'] ? v.url : v.version);
-    });
-  },
   available: function(){
     var title = '';
     if(!argv['--rc'] && !argv['--stable'] && !argv['--unstable']){
@@ -66,20 +59,20 @@ var commands = {
     };
 
     mvm.installed(function(err, installed){
-      if(err) return abort(err);
+      abortIfError(err);
 
       mvm.available(opts, function(err, versions){
-        if(err) return abort(err);
+        abortIfError(err);
 
         if(opts.pokemon){
           console.log(title + ' versions you haven\'t installed yet:');
-          versions = without(versions, pluck(installed, 'version'));
+          versions = _.without(versions, _.pluck(installed, 'version'));
         }
         else {
           console.log(title + ' versions you haven\'t installed yet:');
         }
         printVersions(versions, function(err){
-          if(err) abort(err);
+          abortIfError(err);
         });
       });
     });
@@ -102,16 +95,16 @@ var commands = {
   },
   use: function(opts){
     mvm.use(opts, function(err){
-      if(err) return abort(err);
+      abortIfError(err);
       mvm.current(function(err, v){
-        if(err) return abort(err);
+        abortIfError(err);
         console.log('switched to ' + v);
       });
     });
   },
-  _default: function(){
+  list: function(){
     mvm.installed(function(err, versions){
-      if(err) return abort(err);
+      abortIfError(err);
 
       if(versions.length > 0){
         return printVersions(versions, function(err){
@@ -122,7 +115,7 @@ var commands = {
       console.log('0 versions installed.  Run one of:');
 
       mvm.resolve([{version: 'unstable'}, {version: 'stable'}], function(err, data){
-        if(err) return abort(err);
+        abortIfError(err);
 
         console.log('    m use stable; # installs MongoDB v' + data.stable.version);
         console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
@@ -138,6 +131,7 @@ var opts = {
 
 var cmd = Object.keys(commands).filter(function(name){
   return argv[name] === true;
-})[0] || (argv['<v>'] ? 'show' : '_default');
+})[0] || (argv['<v>'] ? 'use' : 'list');
+debug('cmd is `%s` with opts `%j`', cmd, opts);
 
 commands[cmd](opts);

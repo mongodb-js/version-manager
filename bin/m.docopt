@@ -3,14 +3,14 @@ m
 The MongoDB version manager.
 
 Usage:
-  m use <v>
-  m shell [<v>]
-  m path [<v>]
-  m d [<v>]
+  m use <version>
+  m shell [<version>]
+  m path [<version>]
+  m d [<version>]
   m kill
   m ls
-  m available [--stable --unstable --all --pokemon]
-  m [<v> --url --branch=<branch>]
+  m available [--stable --unstable --rc --all --pokemon]
+  m [<version> --url --branch=<branch>]
 
 Examples:
   m <version>                    # Install or activate MongoDB <version>

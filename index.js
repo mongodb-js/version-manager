@@ -10,9 +10,9 @@ var async = require('async'),
   download = require('./lib/download'),
   extract = require('./lib/extract'),
   versions = require('./lib/versions'),
-  defaults = require('amp-defaults'),
   semver = require('semver'),
-  debug = require('debug')('mongodb-version-manager');
+  debug = require('debug')('mongodb-version-manager'),
+  _ = require('underscore');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
@@ -65,7 +65,7 @@ module.exports.is = function(s, fn){
 };
 
 module.exports.available = function(opts, fn){
-   defaults((opts || {}), {
+   opts = _.defaults((opts || {}), {
     stable: false,
     unstable: false,
     rc: false,
