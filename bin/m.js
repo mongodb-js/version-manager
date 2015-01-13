@@ -66,10 +66,7 @@ var commands = {
 
         if(opts.pokemon){
           console.log(title + ' versions you haven\'t installed yet:');
-          versions = _.without(versions, _.pluck(installed, 'version'));
-        }
-        else {
-          console.log(title + ' versions you haven\'t installed yet:');
+          versions = _.difference(versions, installed);
         }
         printVersions(versions, function(err){
           abortIfError(err);
@@ -125,13 +122,13 @@ var commands = {
 };
 
 var opts = {
-  version: argv['<v>'],
+  version: argv['<version>'],
   branch: argv['--branch']
 };
 
 var cmd = Object.keys(commands).filter(function(name){
   return argv[name] === true;
-})[0] || (argv['<v>'] ? 'use' : 'list');
+})[0] || (argv['<version>'] ? 'use' : 'list');
 debug('cmd is `%s` with opts `%j`', cmd, opts);
 
 commands[cmd](opts);
