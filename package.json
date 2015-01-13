@@ -18,15 +18,13 @@
     "mocha": "~2.0.1"
   },
   "dependencies": {
+    "amp-defaults": "~1.0.1",
     "async": "~0.9.0",
     "cheerio": "~0.17.0",
     "debug": "~1.0.4",
     "docopt": "~0.4.0",
     "downcache": "0.0.5-a",
     "fs-extra": "~0.10.0",
-    "lodash.defaults": "~2.4.1",
-    "lodash.pluck": "~2.4.1",
-    "lodash.without": "~2.4.1",
     "progress": "~1.1.8",
     "request": "~2.40.0",
     "semver": "~3.0.1",

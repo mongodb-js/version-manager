@@ -10,8 +10,7 @@ var async = require('async'),
   download = require('./lib/download'),
   extract = require('./lib/extract'),
   versions = require('./lib/versions'),
-  pluck = require('lodash.pluck'),
-  defaults = require('lodash.defaults'),
+  defaults = require('amp-defaults'),
   semver = require('semver'),
   debug = require('debug')('mongodb-version-manager');
 
