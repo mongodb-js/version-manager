@@ -16,10 +16,10 @@ function printVersions(versions, fn){
 
     console.log(versions.map(function(v){
       if(v === current){
-        return '  \033[32mο\033[0m '+v+' \033[90m \033[0m';
+        return ' \033[32mο '+v+'\033[0m \033[90m \033[0m';
       }
       else {
-        return '  ' + v + '\033[90m \033[0m';
+        return '   ' + v + '\033[90m \033[0m';
       }
     }).join('\n'));
 
