@@ -49,7 +49,7 @@ You can also just update your `package.json` if you don't care about windows:
 
 Now you'll have a sweet [matrix build on travis](https://travis-ci.org/imlucas/mongodb-runner)
 
-![mongodb matrix build](https://i.cloudup.com/kv3VmH1zKO-2000x2000.png)
+![mongodb matrix build](https://cldup.com/YeJkF3s94w-3000x3000.png)
 
 ## License
 
