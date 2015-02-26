@@ -40,7 +40,7 @@ var run = function(args, done) {
       return done(err);
     }
 
-    console.log('exec succeeded!');
+    console.log('exec succeeded for ', cmd);
     done();
   });
 
