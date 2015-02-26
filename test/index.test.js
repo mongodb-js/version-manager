@@ -6,18 +6,23 @@ var mvm = require('../'),
   assert = require('assert'),
   exec = require('child_process').exec,
   path = require('path'),
+  which = require('which'),
   debug = require('debug')('mongodb-version-manager:test');
 
 var M = path.resolve(__dirname, '../bin/m.js');
+var NODE = which.sync('node');
 
-debug('path to bin is %s', M);
+
+debug('path to m bin is %s', M);
+debug('path to node bin is %s', NODE);
 
 var run = function(args, done) {
   if (typeof args === 'function') {
     done = args;
     args = '';
   }
-  var cmd = 'node ' + M + ' ' + args;
+
+  var cmd = NODE + ' ' + M + ' ' + args;
   debug('running `%s`', cmd);
 
   exec(M, function(err, stdout, stderr) {
