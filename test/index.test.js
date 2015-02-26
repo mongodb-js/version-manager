@@ -7,6 +7,7 @@ var mvm = require('../'),
   exec = require('child_process').exec,
   path = require('path'),
   which = require('which'),
+  fs = require('fs'),
   debug = require('debug')('mongodb-version-manager:test');
 
 var M = path.resolve(__dirname, '../bin/m.js');
@@ -24,8 +25,10 @@ var run = function(args, done) {
 
   var cmd = NODE + ' ' + M + ' ' + args;
   debug('running `%s`', cmd);
+  assert(fs.existsSync(M), M + ' does not exist');
+  assert(fs.existsSync(NODE), NODE + ' does not exist');
 
-  exec(M, function(err, stdout, stderr) {
+  exec(cmd, function(err, stdout, stderr) {
     debug('`%s` exec result %j', cmd, {
       err: err,
       stdout: stdout.toString('utf-8'),
@@ -36,6 +39,8 @@ var run = function(args, done) {
       console.error('exec failed: ', err);
       return done(err);
     }
+
+    console.log('exec succeeded!');
     done();
   });
 
