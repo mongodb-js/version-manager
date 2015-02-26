@@ -1,11 +1,36 @@
+if (process.env.CI) {
+  process.env.DEBUG = '*';
+}
+
 var mvm = require('../'),
-  assert = require('assert');
+  assert = require('assert'),
+  exec = require('child_process').exec,
+  path = require('path');
+
+var M = path.resolve(__dirname, '../bin/m.js');
 
 describe('mvm', function() {
-  it('should provide the current version', function(done) {
-    mvm.current(function(err) {
-      console.log('current returned', arguments);
-      done(err);
+  describe('bin', function() {
+    it('should work if i just run `m`', function(done) {
+      exec(M, function(err, stdout, stderr) {
+        console.log('`m`', err, stdout, stderr);
+        if (err) return done(err);
+        done();
+      });
+    });
+    it('should work if i run `m ls`', function(done) {
+      exec(M + ' ls', function(err, stdout, stderr) {
+        console.log('`m ls`', err, stdout, stderr);
+        if (err) return done(err);
+        done();
+      });
+    });
+  });
+  describe('current', function() {
+    it('should provide the current version', function(done) {
+      mvm.current(function(err) {
+        done(err);
+      });
     });
   });
   describe('available', function() {
