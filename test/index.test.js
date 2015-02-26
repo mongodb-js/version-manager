@@ -5,25 +5,45 @@ if (process.env.CI) {
 var mvm = require('../'),
   assert = require('assert'),
   exec = require('child_process').exec,
-  path = require('path');
+  path = require('path'),
+  debug = require('debug')('mongodb-version-manager:test');
 
 var M = path.resolve(__dirname, '../bin/m.js');
+
+debug('path to bin is %s', M);
+
+var run = function(args, done) {
+  if (typeof args === 'function') {
+    done = args;
+    args = '';
+  }
+  var cmd = 'node ' + M + ' ' + args;
+  debug('running `%s`', cmd);
+
+  exec(M, function(err, stdout, stderr) {
+    debug('`%s` exec result', cmd, err, stdout, stderr);
+    if (err) return done(err);
+    done();
+  });
+
+};
 
 describe('mvm', function() {
   describe('bin', function() {
     it('should work if i just run `m`', function(done) {
-      exec(M, function(err, stdout, stderr) {
-        console.log('`m`', err, stdout, stderr);
-        if (err) return done(err);
-        done();
-      });
+      run(done);
     });
+
     it('should work if i run `m ls`', function(done) {
-      exec(M + ' ls', function(err, stdout, stderr) {
-        console.log('`m ls`', err, stdout, stderr);
-        if (err) return done(err);
-        done();
-      });
+      run('ls', done);
+    });
+
+    it('should work if i run `m available`', function(done) {
+      run('available', done);
+    });
+
+    it('should work if i run `m path`', function(done) {
+      run('path', done);
     });
   });
   describe('current', function() {
