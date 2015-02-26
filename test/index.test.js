@@ -26,8 +26,16 @@ var run = function(args, done) {
   debug('running `%s`', cmd);
 
   exec(M, function(err, stdout, stderr) {
-    debug('`%s` exec result', cmd, err, stdout, stderr);
-    if (err) return done(err);
+    debug('`%s` exec result %j', cmd, {
+      err: err,
+      stdout: stdout.toString('utf-8'),
+      stderr: stderr.toString('utf-8')
+    });
+
+    if (err) {
+      console.error('exec failed: ', err);
+      return done(err);
+    }
     done();
   });
 
