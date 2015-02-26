@@ -10,7 +10,7 @@ Download and install the current unstable and two previous stable releases:
 ```shell
 npm install -g mongodb-version-manager
 export PATH="`m path`:$PATH"
-m 2.7.x && npm test && mongod --version
+m 3.0.x && npm test && mongod --version
 m 2.6.x && npm test && mongod --version
 m 2.4.x && npm test && mongod --version
 ```
@@ -27,7 +27,7 @@ env:
   - MONGODB_VERSION=2.4.x
   - MONGODB_VERSION=2.6.x
   - MONGODB_VERSION=2.7.x
-  - MONGODB_VERSION=2.8.x
+  - MONGODB_VERSION=3.0.x
 ```
 
 `npm install --save-dev mongodb-version-manager` and in your test runner js file:
