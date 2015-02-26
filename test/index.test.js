@@ -29,18 +29,10 @@ var run = function(args, done) {
   assert(fs.existsSync(NODE), NODE + ' does not exist');
 
   exec(cmd, function(err, stdout, stderr) {
-    debug('`%s` exec result %j', cmd, {
-      err: err,
-      stdout: stdout.toString('utf-8'),
-      stderr: stderr.toString('utf-8')
-    });
-
     if (err) {
-      console.error('exec failed: ', err);
+      console.error('exec failed: ', err, stdout.toString('utf-8'), stderr.toString('utf-8'));
       return done(err);
     }
-
-    console.log('exec succeeded for ', cmd);
     done();
   });
 
@@ -107,6 +99,11 @@ describe('mvm', function() {
           assert.equal(stable.length, 0);
           done();
         });
+    });
+  });
+  describe('regressions', function() {
+    it('should install 2.4.x [#15]', function(done) {
+      run('2.4.x', done);
     });
   });
 });
