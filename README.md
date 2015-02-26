@@ -1,6 +1,7 @@
 # mongodb-version-manager
 
-[![build status](https://secure.travis-ci.org/imlucas/mongodb-version-manager.png)](http://travis-ci.org/imlucas/mongodb-version-manager)
+[![linux build status](https://secure.travis-ci.org/imlucas/mongodb-version-manager.png)](http://travis-ci.org/imlucas/mongodb-version-manager)
+[![windows build status](https://ci.appveyor.com/api/projects/status/github/imlucas/mongodb-version-manager)](https://ci.appveyor.com/project/imlucas/mongodb-version-manager)
 
 ## Example
 

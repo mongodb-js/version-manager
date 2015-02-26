@@ -23,7 +23,7 @@ var run = function(args, done) {
     args = '';
   }
 
-  var cmd = NODE + ' ' + M + ' ' + args;
+  var cmd = '"' + NODE + '" ' + M + ' ' + args;
   debug('running `%s`', cmd);
   assert(fs.existsSync(M), M + ' does not exist');
   assert(fs.existsSync(NODE), NODE + ' does not exist');
