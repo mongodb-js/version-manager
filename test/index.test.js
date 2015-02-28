@@ -29,10 +29,17 @@ var run = function(args, done) {
   assert(fs.existsSync(NODE), NODE + ' does not exist');
 
   exec(cmd, function(err, stdout, stderr) {
+    debug('result of `%s`', cmd, JSON.stringify({
+      stdout: stdout.toString('utf-8'),
+      stderr: stderr.toString('utf-8')
+    }, null, 2));
+
     if (err) {
-      console.error('exec failed: ', err, stdout.toString('utf-8'), stderr.toString('utf-8'));
+      debug('failed to run `%s`', cmd);
+      console.error('exec failed: ', err);
       return done(err);
     }
+    debug('completed successfully `%s`', cmd);
     done();
   });
 

@@ -1,2 +1,3 @@
 -R spec
 --timeout 1200000
+--slow 1000
