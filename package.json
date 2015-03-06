@@ -4,8 +4,9 @@
   "description": "Cross-platform helper for managing and installing MongoDB",
   "repository": {
     "type": "git",
-    "url": "git://github.com/imlucas/mongodb-version-manager.git"
+    "url": "git://github.com/mongodb-js/version-manager.git"
   },
+  "homepage": "https://github.com/mongodb-js/version-manager",
   "bin": {
     "m": "bin/m.js"
   },
