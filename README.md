@@ -1,7 +1,7 @@
 # mongodb-version-manager
 
-[![linux build status](https://secure.travis-ci.org/imlucas/mongodb-version-manager.png)](http://travis-ci.org/imlucas/mongodb-version-manager)
-[![windows build status](https://ci.appveyor.com/api/projects/status/github/imlucas/mongodb-version-manager)](https://ci.appveyor.com/project/imlucas/mongodb-version-manager)
+[![linux build status](https://secure.travis-ci.org/mongodb-js/version-manager.png)](http://travis-ci.org/mongodb-js/version-manager)
+[![windows build status](https://ci.appveyor.com/api/projects/status/github/mongodb-js/version-manager)](https://ci.appveyor.com/project/mongodb-js/version-manager)
 
 ## Example
 
@@ -15,9 +15,10 @@ m 2.6.x && npm test && mongod --version
 m 2.4.x && npm test && mongod --version
 ```
 
-## Testing multiple versions of MongoDB with TravisCI
+## TravisCI Automation
 
 1. Use a `.travis.yml` like
+
   ```yaml
   language: node_js
   node_js:
@@ -29,6 +30,7 @@ m 2.4.x && npm test && mongod --version
   ```
 2. `npm install --save-dev mongodb-version-manager`
 3. update your package.json
+
   ```json
   "scripts": {
     "pretest": "m ${MONGODB_VERSION}",
