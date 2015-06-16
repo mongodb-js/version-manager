@@ -1,7 +1,9 @@
 # mongodb-version-manager
 
 [![linux build status](https://secure.travis-ci.org/mongodb-js/version-manager.png)](http://travis-ci.org/mongodb-js/version-manager)
-[![windows build status](https://ci.appveyor.com/api/projects/status/github/mongodb-js/version-manager)](https://ci.appveyor.com/project/mongodb-js/version-manager)
+[![windows build status](https://ci.appveyor.com/api/projects/status/github/imlucas/mongodb-version-manager)](https://ci.appveyor.com/project/imlucas/mongodb-version-manager)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mongodb-js/mongodb-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 ## Example
 
