@@ -3,24 +3,17 @@ m
 The MongoDB version manager.
 
 Usage:
-  m use <version>
-  m shell [<version>]
-  m path [<version>]
-  m d [<version>]
-  m ls
+  m use <version> [--branch=<branch> --distro=<distro>]
+  m url <version> [--branch=<branch> --distro=<distro>]
   m available [--stable --unstable --rc --pokemon]
-  m [<version> --url --branch=<branch>]
+  m path
 
 Examples:
-  m <version>                    # Install or activate MongoDB <version>
-  m shell                        # Open a MongoDB shell
+  m use <version>                # Install or activate MongoDB <version>
   m path                         # Print the absolute path to the current MongoDB version
-  m d                            # Start mongod in the foreground
-  m 2.4.x                        # Print latest 2.4 series version
   m available                    # List all avilable versions
-  m stable --url                 # Print download URL for the latest stable version
-  m unstable                     # Print latest unstable version
-  m 2ce51c8e0d4bf84589bffa87e59f2401578c2572 --url # Download URL for mci artifact at a specific commit
+  m url stable                   # Print download URL for the latest stable version
+  m url 2ce51c8e0d4bf84589bffa87e59f2401578c2572 # Download URL for mci artifact at a specific commit
 
 Options:
   -h --help     Show this screen.

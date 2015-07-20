@@ -1,24 +1,24 @@
-var async = require('async'),
-  which = require('which'),
-  windows = require('os').platform() === 'win32',
-  exec = require('child_process').exec,
-  fs = require('fs-extra'),
-  resolve = require('./lib/resolve'),
-  path = require('./lib/path'),
-  config = require('./lib/config'),
-  activate = require('./lib/activate'),
-  download = require('./lib/download'),
-  extract = require('./lib/extract'),
-  versions = require('./lib/versions'),
-  semver = require('semver'),
-  debug = require('debug')('mongodb-version-manager'),
-  _ = require('underscore');
+var async = require('async');
+var which = require('which');
+var exec = require('child_process').exec;
+var fs = require('fs-extra');
+var resolve = require('./lib/resolve');
+var path = require('./lib/path');
+var config = require('./lib/config');
+var activate = require('./lib/activate');
+var download = require('./lib/download');
+var extract = require('./lib/extract');
+var versions = require('./lib/versions');
+var semver = require('semver');
+var debug = require('debug')('mongodb-version-manager');
+var _ = require('underscore');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
 var bin = path.resolve(path.current({
     name: 'mongodb'
   }) + '/bin');
+
 if (process.env.PATH.indexOf(bin) === -1) {
   process.env.PATH = bin + ':' + process.env.PATH;
 }
@@ -57,15 +57,7 @@ module.exports.installed = function(fn) {
   });
 };
 
-module.exports.resolve = function(opts, fn) {
-  resolve(opts, fn);
-};
-
-module.exports.is = function(s, fn) {
-  module.exports.current(function(err, v) {
-    fn(null, semver.satisfies(v, s));
-  });
-};
+module.exports.resolve = resolve;
 
 module.exports.available = function(opts, fn) {
   opts = _.defaults(opts || {}, {
@@ -97,9 +89,11 @@ module.exports.available = function(opts, fn) {
   });
 };
 
-module.exports.is = function(s, fn) {
+module.exports.is = function(s, done) {
   module.exports.current(function(err, v) {
-    fn(null, semver.satisfies(v, s));
+    if (err) return done(err);
+
+    done(null, semver.satisfies(v, s));
   });
 };
 
@@ -122,36 +116,34 @@ module.exports.current = function(fn) {
   });
 };
 
-module.exports.install = function(version, fn) {
+module.exports.install = function(version, done) {
   resolve({
     version: version
   }, function(err, pkg) {
-    async.series([download.bind(null, pkg), extract.bind(null, pkg)], fn);
+    if (err) return done(err);
+
+    async.series([download.bind(null, pkg), extract.bind(null, pkg)], done);
   });
 };
 
-module.exports.use = function(opts, fn) {
-  if (!opts.version) {
-    var existing = which.sync('mongod');
-    debug('noop. using existing mongo install at %s', existing);
-    return process.nextTick(function() {
-      fn(null, null);
-    });
-  }
-
+module.exports.use = function(opts, done) {
   resolve(opts, function(err, pkg) {
+    if (err) return done(err);
+
     module.exports.current(function(err, v) {
+      if (err) return done(err);
+
       if (pkg.version === v) {
         debug('already using ' + v);
-        return fn();
+        return done();
       }
       async.series([
         download.bind(null, pkg),
         extract.bind(null, pkg),
         activate.bind(null, pkg)
       ], function(err) {
-        if (err) return fn(err);
-        return fn(null, pkg);
+        if (err) return done(err);
+        return done(null, pkg);
       });
     });
   });

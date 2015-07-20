@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 
-var mvm = require('../'),
-  which = require('which'),
-  fs = require('fs'),
-  docopt = require('docopt').docopt,
-  pkg = require('../package.json'),
-  argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {
-    version: pkg.version
-  }),
-  spawn = require('child_process').spawn,
-  _ = require('underscore'),
-  debug = require('debug')('mongodb-version-manager');
-
+/*eslint no-sync:0 no-octal-escape:0*/
+var mvm = require('../');
+var fs = require('fs');
+var docopt = require('docopt').docopt;
+var pkg = require('../package.json');
+var argv = docopt(fs.readFileSync('./m.docopt', 'utf-8'), {
+  version: pkg.version
+});
+var difference = require('lodash.difference');
+var debug = require('debug')('mongodb-version-manager');
 var cmd;
 
 function printVersions(versions, fn) {
@@ -21,9 +19,8 @@ function printVersions(versions, fn) {
     console.log(versions.map(function(v) {
       if (v === current) {
         return ' \033[32mο ' + v + '\033[0m \033[90m \033[0m';
-      } else {
-        return '   ' + v + '\033[90m \033[0m';
       }
+      return '   ' + v + '\033[90m \033[0m';
     }).join('\n'));
 
     fn();
@@ -86,7 +83,7 @@ var commands = {
 
         if (opts.pokemon) {
           console.log(title + ' versions you haven\'t installed yet:');
-          versions = _.difference(versions, installed);
+          versions = difference(versions, installed);
         }
         printVersions(versions, function(err) {
           abortIfError(err);
@@ -96,22 +93,8 @@ var commands = {
   },
   path: function() {
     mvm.path(function(err, p) {
+      abortIfError(err);
       console.log(p);
-    });
-  },
-  kill: function() {
-    mvm.kill(function() {});
-  },
-  shell: function() {
-    mvm.path(function() {
-      spawn(which.sync('mongo'), [], {
-        stdio: 'inherit'
-      });
-    });
-  },
-  d: function() {
-    spawn(which.sync('mongod'), [], {
-      stdio: 'inherit'
     });
   },
   use: function(opts) {
@@ -137,26 +120,27 @@ var commands = {
 
       mvm.resolve([{
         version: 'unstable'
-        }, {
+      }, {
         version: 'stable'
       }], function(err, data) {
-          abortIfError(err);
+        abortIfError(err);
 
-          console.log('    m use stable; # installs MongoDB v' + data.stable.version);
-          console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
-        });
+        console.log('    m use stable; # installs MongoDB v' + data.stable.version);
+        console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
+      });
     });
   }
 };
 
 var opts = {
   version: argv['<version>'],
-  branch: argv['--branch']
+  branch: argv['--branch'],
+  distro: argv['--distro']
 };
 
 cmd = Object.keys(commands).filter(function(name) {
-  return argv[name] === true;
-})[0] || (argv['<version>'] ? 'use' : 'list');
+    return argv[name] === true;
+  })[0] || (argv['<version>'] ? 'use' : 'list');
 debug('cmd is `%s` with opts `%j`', cmd, opts);
 
 commands[cmd](opts);

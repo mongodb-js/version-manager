@@ -1,18 +1,14 @@
-if (process.env.CI) {
-  process.env.DEBUG = '*';
-}
-
-var mvm = require('../'),
-  assert = require('assert'),
-  exec = require('child_process').exec,
-  path = require('path'),
-  which = require('which'),
-  fs = require('fs'),
-  debug = require('debug')('mongodb-version-manager:test');
+/*eslint no-sync: 0*/
+var mvm = require('../');
+var assert = require('assert');
+var exec = require('child_process').exec;
+var path = require('path');
+var which = require('which');
+var fs = require('fs');
+var debug = require('debug')('mongodb-version-manager:test');
 
 var M = path.resolve(__dirname, '../bin/m.js');
 var NODE = which.sync('node');
-
 
 debug('path to m bin is %s', M);
 debug('path to node bin is %s', NODE);
@@ -42,10 +38,9 @@ var run = function(args, done) {
     debug('completed successfully `%s`', cmd);
     done();
   });
-
 };
 
-describe('mvm', function() {
+describe('mongodb-version-manager', function() {
   describe('bin', function() {
     it('should work if i just run `m`', function(done) {
       run(done);
@@ -75,37 +70,37 @@ describe('mvm', function() {
       mvm.available({
         stable: true
       }, function(err, versions) {
-          assert.ifError(err);
-          var unstable = versions.filter(function(v) {
-            return (parseInt(v.split('.')[1], 10) % 2) > 0;
-          });
-          assert.equal(unstable.length, 0);
-          done();
+        assert.ifError(err);
+        var unstable = versions.filter(function(v) {
+          return parseInt(v.split('.')[1], 10) % 2 > 0;
         });
+        assert.equal(unstable.length, 0);
+        done();
+      });
     });
     it('should list unstable versions', function(done) {
       mvm.available({
         unstable: true
       }, function(err, versions) {
-          assert.ifError(err);
-          var stable = versions.filter(function(v) {
-            return (parseInt(v.split('.')[1], 10) % 2) === 0;
-          });
-          assert.equal(stable.length, 0);
-          done();
+        assert.ifError(err);
+        var stable = versions.filter(function(v) {
+          return parseInt(v.split('.')[1], 10) % 2 === 0;
         });
+        assert.equal(stable.length, 0);
+        done();
+      });
     });
     it('should list rc versions', function(done) {
       mvm.available({
         rc: true
       }, function(err, versions) {
-          assert.ifError(err);
-          var stable = versions.filter(function(v) {
-            return v.indexOf('rc') === -1;
-          });
-          assert.equal(stable.length, 0);
-          done();
+        assert.ifError(err);
+        var stable = versions.filter(function(v) {
+          return v.indexOf('rc') === -1;
         });
+        assert.equal(stable.length, 0);
+        done();
+      });
     });
   });
   describe('regressions', function() {
