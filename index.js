@@ -17,8 +17,8 @@ var async = require('async'),
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
 var bin = path.resolve(path.current({
-  name: 'mongodb'
-}) + '/bin');
+    name: 'mongodb'
+  }) + '/bin');
 if (process.env.PATH.indexOf(bin) === -1) {
   process.env.PATH = bin + ':' + process.env.PATH;
 }
@@ -34,31 +34,27 @@ module.exports = function(opts, fn) {
   }
   opts.version = opts.version || process.env.MONGODB_VERSION;
 
-  module.exports.kill(function(err) {
-    if (err) return fn(err);
-
-    module.exports.use(opts, fn);
-  });
+  module.exports.use(opts, fn);
 };
 
 module.exports.config = config;
 module.exports.path = function(fn) {
   fn(null, path.resolve(path.current({
-    name: 'mongodb'
-  }) + '/bin'));
+      name: 'mongodb'
+    }) + '/bin'));
 };
 
 module.exports.installed = function(fn) {
   fs.readdir(path.base({
     name: 'mongodb'
   }), function(err, files) {
-      files = files || [];
-      if (err) return fn(null, files);
+    files = files || [];
+    if (err) return fn(null, files);
 
-      fn(null, files.filter(function(f) {
-        return VERSION.test(f);
-      }));
-    });
+    fn(null, files.filter(function(f) {
+      return VERSION.test(f);
+    }));
+  });
 };
 
 module.exports.resolve = function(opts, fn) {
@@ -72,10 +68,10 @@ module.exports.is = function(s, fn) {
 };
 
 module.exports.available = function(opts, fn) {
-  opts = _.defaults((opts || {}), {
+  opts = _.defaults(opts || {}, {
     stable: false,
     unstable: false,
-    rc: false,
+    rc: false
   });
 
   debug('options for avilable', opts);
@@ -85,7 +81,7 @@ module.exports.available = function(opts, fn) {
       return semver.parse(v);
     })
       .filter(function(v) {
-        v.stable = (v.minor % 2) === 0;
+        v.stable = v.minor % 2 === 0;
         v.unstable = !v.stable;
         v.rc = v.prerelease.length > 0;
 
@@ -99,17 +95,6 @@ module.exports.available = function(opts, fn) {
       });
     fn(null, res);
   });
-};
-
-module.exports.kill = function(fn) {
-  async.parallel(['mongod', 'mongo', 'mongos'].map(function(name) {
-    var cmd = (windows) ? 'taskkill /F /IM ' + name + '.exe' : 'killall -9 ' + name;
-    return function(cb) {
-      exec(cmd, function() {
-        cb();
-      });
-    };
-  }), fn);
 };
 
 module.exports.is = function(s, fn) {
@@ -141,8 +126,8 @@ module.exports.install = function(version, fn) {
   resolve({
     version: version
   }, function(err, pkg) {
-      async.series([download.bind(null, pkg), extract.bind(null, pkg)], fn);
-    });
+    async.series([download.bind(null, pkg), extract.bind(null, pkg)], fn);
+  });
 };
 
 module.exports.use = function(opts, fn) {
@@ -165,9 +150,9 @@ module.exports.use = function(opts, fn) {
         extract.bind(null, pkg),
         activate.bind(null, pkg)
       ], function(err) {
-          if (err) return fn(err);
-          return fn(null, pkg);
-        });
+        if (err) return fn(err);
+        return fn(null, pkg);
+      });
     });
   });
 };

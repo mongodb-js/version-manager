@@ -7,7 +7,6 @@ Usage:
   m shell [<version>]
   m path [<version>]
   m d [<version>]
-  m kill
   m ls
   m available [--stable --unstable --rc --pokemon]
   m [<version> --url --branch=<branch>]
