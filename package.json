@@ -17,7 +17,12 @@
   },
   "devDependencies": {
     "lone": "~0.4.2",
-    "mocha": "~2.2.4"
+    "coveralls": "^2.11.2",
+    "eslint-config-mongodb-js": "^0.1.5",
+    "istanbul": "^0.3.17",
+    "mocha": "~2.2.5",
+    "mongodb-js-precommit": "^0.1.3",
+    "pre-commit": "^1.0.10"
   },
   "dependencies": {
     "async": "~0.9.0",
@@ -28,6 +33,8 @@
     "fs-extra": "~0.18.1",
     "lodash.defaults": "^3.1.2",
     "lodash.difference": "^3.2.2",
+    "mongodb-download-url": "0.0.2",
+    "mongodb-version-list": "0.0.3",
     "progress": "~1.1.8",
     "request": "~2.55.0",
     "semver": "~4.3.3",
@@ -36,5 +43,6 @@
     "untildify": "~2.0.0",
     "unzip": "~0.1.11",
     "which": "~1.0.9"
-  }
+  },
+  "license": "Apache-2.0"
 }

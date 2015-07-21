@@ -42,14 +42,6 @@ var run = function(args, done) {
 
 describe('mongodb-version-manager', function() {
   describe('bin', function() {
-    it('should work if i just run `m`', function(done) {
-      run(done);
-    });
-
-    it('should work if i run `m ls`', function(done) {
-      run('ls', done);
-    });
-
     it('should work if i run `m available`', function(done) {
       run('available', done);
     });

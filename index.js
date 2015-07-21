@@ -2,16 +2,16 @@ var async = require('async');
 var which = require('which');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
-var resolve = require('./lib/resolve');
+var resolve = require('mongodb-download-url');
+var versions = require('mongodb-version-list');
+var semver = require('semver');
+var defaults = require('lodash.defaults');
 var path = require('./lib/path');
 var config = require('./lib/config');
 var activate = require('./lib/activate');
 var download = require('./lib/download');
 var extract = require('./lib/extract');
-var versions = require('./lib/versions');
-var semver = require('semver');
 var debug = require('debug')('mongodb-version-manager');
-var _ = require('underscore');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
@@ -60,7 +60,7 @@ module.exports.installed = function(fn) {
 module.exports.resolve = resolve;
 
 module.exports.available = function(opts, fn) {
-  opts = _.defaults(opts || {}, {
+  opts = defaults(opts || {}, {
     stable: false,
     unstable: false,
     rc: false
