@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/*eslint no-sync:0 no-octal-escape:0*/
+/*eslint no-sync:0 no-octal-escape:0, no-path-concat:0*/
 var mvm = require('../');
 var fs = require('fs');
 var docopt = require('docopt').docopt;

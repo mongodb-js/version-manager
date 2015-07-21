@@ -12,11 +12,20 @@
     "m": "bin/m.js"
   },
   "scripts": {
+    "check": "mongodb-js-precommit",
     "test": "mocha",
-    "dist": "DEBUG=* lone --node=~0.11.0"
+    "ci": "./node_modules/istanbul/lib/cli.js cover _mocha -- -R spec ./test/*.test.js"
   },
+  "check": {
+    "ignore": [
+      "coverage/{*,**/*}"
+    ]
+  },
+  "precommit": [
+    "check",
+    "test"
+  ],
   "devDependencies": {
-    "lone": "~0.4.2",
     "coveralls": "^2.11.2",
     "eslint-config-mongodb-js": "^0.1.5",
     "istanbul": "^0.3.17",
@@ -26,10 +35,8 @@
   },
   "dependencies": {
     "async": "~0.9.0",
-    "cheerio": "~0.19.0",
     "debug": "~2.1.3",
     "docopt": "~0.6.2",
-    "downcache": "0.0.8",
     "fs-extra": "~0.18.1",
     "lodash.defaults": "^3.1.2",
     "lodash.difference": "^3.2.2",
