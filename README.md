@@ -47,4 +47,4 @@ Now you'll have a sweet [matrix build on travis](https://travis-ci.org/imlucas/m
 
 ## License
 
-MIT
+Apache 2.0
