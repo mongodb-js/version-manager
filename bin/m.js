@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/*eslint no-sync:0 no-octal-escape:0, no-path-concat:0*/
+/* eslint no-sync:0 no-octal-escape:0, no-path-concat:0 */
 var mvm = require('../');
 var fs = require('fs');
 var docopt = require('docopt').docopt;
@@ -138,9 +138,14 @@ var opts = {
   distro: argv['--distro']
 };
 
-cmd = Object.keys(commands).filter(function(name) {
+cmd = Object.keys(commands)
+  .filter(function(name) {
     return argv[name] === true;
-  })[0] || (argv['<version>'] ? 'use' : 'list');
+  })[0];
+
+if (!cmd) {
+  cmd = argv['<version>'] ? 'use' : 'list';
+}
 debug('cmd is `%s` with opts `%j`', cmd, opts);
 
 commands[cmd](opts);

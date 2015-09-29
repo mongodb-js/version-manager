@@ -15,9 +15,9 @@ var debug = require('debug')('mongodb-version-manager');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
-var bin = path.resolve(path.current({
-    name: 'mongodb'
-  }) + '/bin');
+var bin = path.join(path.current({
+  name: 'mongodb'
+}), 'bin');
 
 if (process.env.PATH.indexOf(bin) === -1) {
   process.env.PATH = bin + ':' + process.env.PATH;
@@ -39,9 +39,9 @@ module.exports = function(opts, fn) {
 
 module.exports.config = config;
 module.exports.path = function(fn) {
-  fn(null, path.resolve(path.current({
-      name: 'mongodb'
-    }) + '/bin'));
+  fn(null, path.join(path.current({
+    name: 'mongodb'
+  }), 'bin'));
 };
 
 module.exports.installed = function(fn) {
