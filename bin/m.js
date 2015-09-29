@@ -33,7 +33,7 @@ var abortIfError = function(err) {
     console.error('----');
     console.error('Try running your command again with debugging on:');
     console.error('  DEBUG=* m ' + cmd);
-    console.error('Bug reports welcome at http://github.com/imlucas/mongodb-version-manager');
+    console.error('Bug reports welcome at https://github.com/mongodb-js/version-manager/issues');
     console.error('----');
     return process.exit(1);
   }
