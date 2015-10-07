@@ -50,7 +50,7 @@
     "tildify": "~1.1.1",
     "untildify": "~2.1.0",
     "unzip": "~0.1.11",
-    "which": "~1.1.2"
+    "which": "~1.2.0"
   },
   "license": "Apache-2.0"
 }
