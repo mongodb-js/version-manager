@@ -18,6 +18,7 @@ Examples:
 Options:
   -h --help     Show this screen.
   --version     Show version.
+  --debug       Show debugging messages.
   --url         Print download URL and exit.
   --stable      Only list available stable versions.
   --unstable    Only list available unstable versions.

@@ -1,14 +1,21 @@
 #!/usr/bin/env node
 
 /* eslint no-sync:0 no-octal-escape:0, no-path-concat:0 */
-var mvm = require('../');
 var fs = require('fs');
 var docopt = require('docopt').docopt;
 var pkg = require('../package.json');
 var argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {
   version: pkg.version
 });
+
+if (argv['--debug']) {
+  process.env.DEBUG = '*';
+}
+
+var mvm = require('../');
 var difference = require('lodash.difference');
+var chalk = require('chalk');
+var figures = require('figures');
 var debug = require('debug')('mongodb-version-manager');
 var cmd;
 
@@ -29,12 +36,19 @@ function printVersions(versions, fn) {
 
 var abortIfError = function(err) {
   if (err) {
-    console.error(err);
-    console.error('----');
+    console.error(chalk.bold.red(figures.cross),
+      ' Error:', chalk.bold.red(err.message));
+
+    console.error('We apologize for this issue and welcome your bug reports.')
+    console.error('Please visit: https://github.com/mongodb-js/version-manager/issues');
+    console.error();
     console.error('Try running your command again with debugging on:');
-    console.error('  DEBUG=* m ' + cmd);
-    console.error('Bug reports welcome at https://github.com/mongodb-js/version-manager/issues');
-    console.error('----');
+    console.error('   m ' + cmd + ' --debug');
+    console.error();
+    console.error(chalk.bold('Stack Trace'));
+    err.stack.split('\n').map(function(line){
+      console.error('  ', chalk.gray(line));
+    });
     return process.exit(1);
   }
 };
