@@ -12,21 +12,10 @@ var activate = require('./lib/activate');
 var download = require('./lib/download');
 var extract = require('./lib/extract');
 var debug = require('debug')('mongodb-version-manager');
-var os = require('os');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
-var bin = path.join(path.current({
-  name: 'mongodb'
-}), 'bin');
-
-if (process.env.PATH.indexOf(bin) === -1) {
-  if (os.platform() === 'win32') {
-    process.env.PATH = bin + ';' + process.env.PATH;
-  } else {
-    process.env.PATH = bin + ':' + process.env.PATH;
-  }
-}
+activate.addToPath(path.join(path.current(), 'bin'));
 
 module.exports = function(opts, fn) {
   if (typeof opts === 'function') {

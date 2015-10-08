@@ -46,7 +46,7 @@ var abortIfError = function(err) {
     console.error('   m ' + cmd + ' --debug');
     console.error();
     console.error(chalk.bold('Stack Trace'));
-    err.stack.split('\n').map(function(line){
+    err.stack.split('\n').map(function(line) {
       console.error('  ', chalk.gray(line));
     });
     return process.exit(1);
