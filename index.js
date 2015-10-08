@@ -135,7 +135,7 @@ module.exports.use = function(opts, done) {
 
       if (pkg.version === v) {
         debug('already using ' + v);
-        return done();
+        return done(null, pkg);
       }
       async.series([
         download.bind(null, pkg),
