@@ -15,7 +15,8 @@
     "fmt": "mongodb-js-fmt lib/*.js",
     "check": "mongodb-js-precommit",
     "test": "mocha",
-    "ci": "./node_modules/istanbul/lib/cli.js cover _mocha -- -R spec ./test/*.test.js"
+    "ci": "npm run check && npm run coverage",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover _mocha -- -R spec ./test/*.test.js"
   },
   "check": {
     "ignore": [
@@ -47,7 +48,7 @@
     "request": "~2.64.0",
     "semver": "~5.0.3",
     "tar": "~2.2.1",
-    "tildify": "~1.1.1",
+    "tildify": "~1.1.2",
     "untildify": "~2.1.0",
     "unzip": "~0.1.11",
     "which": "~1.2.0"
