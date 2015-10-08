@@ -139,6 +139,10 @@ var commands = {
       }], function(err, data) {
         abortIfError(err);
 
+        if(!data || !data.stable || data.unstable) {
+          return abortIfError(new Error('Unknown error'));
+        }
+
         console.log('    m use stable; # installs MongoDB v' + data.stable.version);
         console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
       });
