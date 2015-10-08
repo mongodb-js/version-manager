@@ -139,7 +139,7 @@ var commands = {
       }], function(err, data) {
         abortIfError(err);
 
-        if(!data || !data.stable || data.unstable) {
+        if (!data || !data.stable || data.unstable) {
           return abortIfError(new Error('Unknown error'));
         }
 
