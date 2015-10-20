@@ -1,4 +1,3 @@
-var async = require('async');
 var which = require('which');
 var exec = require('child_process').exec;
 var fs = require('fs-extra');
@@ -11,6 +10,7 @@ var config = require('./lib/config');
 var activate = require('./lib/activate');
 var download = require('./lib/download');
 var extract = require('./lib/extract');
+var async = require('async');
 var debug = require('debug')('mongodb-version-manager');
 
 var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
@@ -92,21 +92,27 @@ module.exports.is = function(s, done) {
 };
 
 module.exports.current = function(fn) {
-  which('mongod', function(err, mongod_bin) {
-    if (err || !mongod_bin) {
-      return fn(null);
-    }
-    exec(mongod_bin + ' --version', function(err, stdout) {
-      if (err) return fn(err);
-
+  async.waterfall([
+    which.bind(null, 'mongod'),
+    function(mongod, cb) {
+      if (!mongod) {
+        cb(null);
+        return;
+      }
+      exec(mongod + ' --version', cb);
+    },
+    function(stdout, cb) {
       var shellVersion = stdout
         .toString('utf-8')
         .split('\n')[0]
         .split(',')[0]
         .replace('db version v', '');
 
-      fn(null, shellVersion);
-    });
+      cb(null, shellVersion);
+    }
+  ], function(err, res) {
+    if (err) return fn(err);
+    fn(null, res[res.length - 1]);
   });
 };
 
@@ -116,29 +122,33 @@ module.exports.install = function(version, done) {
   }, function(err, pkg) {
     if (err) return done(err);
 
-    async.series([download.bind(null, pkg), extract.bind(null, pkg)], done);
+    async.series([
+      download.bind(null, pkg),
+      extract.bind(null, pkg)
+    ], done);
   });
 };
 
 module.exports.use = function(opts, done) {
-  resolve(opts, function(err, pkg) {
-    if (err) return done(err);
-
-    module.exports.current(function(err, v) {
-      if (err) return done(err);
-
-      if (pkg.version === v) {
+  async.waterfall([
+    resolve.bind(null, opts),
+    function(pkg, cb) {
+      opts.pkg = pkg;
+      module.exports.current(cb);
+    },
+    function(v, cb) {
+      if (opts.pkg.version === v) {
         debug('already using ' + v);
-        return done(null, pkg);
+        return cb(null, opts.pkg);
       }
       async.series([
-        download.bind(null, pkg),
-        extract.bind(null, pkg),
-        activate.bind(null, pkg)
-      ], function(err) {
-        if (err) return done(err);
-        return done(null, pkg);
-      });
-    });
+        download.bind(null, opts.pkg),
+        extract.bind(null, opts.pkg),
+        activate.bind(null, opts.pkg)
+      ], cb);
+    }
+  ], function(err, res) {
+    if (err) return done(err);
+    done(null, res[res.length - 1]);
   });
 };

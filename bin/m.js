@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-/* eslint no-sync:0 no-octal-escape:0, no-path-concat:0 */
+/* eslint no-sync:0, no-octal-escape:0, no-console:0, no-path-concat:0 */
 var fs = require('fs');
+var async = require('async');
 var docopt = require('docopt').docopt;
 var pkg = require('../package.json');
 var argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {
@@ -39,7 +40,7 @@ var abortIfError = function(err) {
     console.error(chalk.bold.red(figures.cross),
       ' Error:', chalk.bold.red(err.message));
 
-    console.error('We apologize for this issue and welcome your bug reports.')
+    console.error('We apologize for this issue and welcome your bug reports.');
     console.error('Please visit: https://github.com/mongodb-js/version-manager/issues');
     console.error();
     console.error('Try running your command again with debugging on:');
@@ -51,6 +52,26 @@ var abortIfError = function(err) {
     });
     return process.exit(1);
   }
+};
+
+var onNoVersionsInstalled = function(cb) {
+  console.log('0 versions installed.  Run one of:');
+
+  mvm.resolve([{
+    version: 'unstable'
+  }, {
+    version: 'stable'
+  }], function(err, data) {
+    if (err) return cb(err);
+
+    if (!data || !data.stable || data.unstable) {
+      return cb(new Error('Unknown error'));
+    }
+
+    console.log('    m use stable; # installs MongoDB v' + data.stable.version);
+    console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
+    cb();
+  });
 };
 
 var commands = {
@@ -85,67 +106,62 @@ var commands = {
       pokemon: argv['--pokemon']
     };
 
-    mvm.installed(function(err, installed) {
-      abortIfError(err);
-
-      mvm.available(opts, function(err, versions) {
-        abortIfError(err);
-
+    async.waterfall([
+      mvm.installed.bind(null),
+      function(installedVersion, cb) {
+        opts.installedVersion = installedVersion;
+        cb();
+      },
+      mvm.available.bind(null, opts),
+      function(versions, cb) {
         if (!versions || versions.length === 0) {
-          return abortIfError(new Error('No available versions?'));
+          return cb(new Error('No available versions?'));
         }
 
         if (opts.pokemon) {
           console.log(title + ' versions you haven\'t installed yet:');
-          versions = difference(versions, installed);
+          versions = difference(versions, opts.installedVersion);
         }
-        printVersions(versions, function(err) {
-          abortIfError(err);
-        });
-      });
+        cb(null, versions);
+      },
+      printVersions.bind(null)
+    ], function(err) {
+      abortIfError(err);
+      process.exit(0);
     });
   },
   path: function() {
     mvm.path(function(err, p) {
       abortIfError(err);
       console.log(p);
+      process.exit(0);
     });
   },
   use: function(opts) {
-    mvm.use(opts, function(err) {
+    async.series([
+      mvm.use.bind(null, opts),
+      mvm.current
+    ], function(err, res) {
       abortIfError(err);
-      mvm.current(function(err, v) {
-        abortIfError(err);
-        console.log('switched to ' + v);
-      });
+
+      var version = res[res.length - 1];
+      console.log('switched to %s', version);
+      process.exit(0);
     });
   },
   list: function() {
-    mvm.installed(function(err, versions) {
-      abortIfError(err);
-
-      if (versions.length > 0) {
-        return printVersions(versions, function(err) {
-          if (err) return console.log(err) && process.exit(1);
-        });
-      }
-
-      console.log('0 versions installed.  Run one of:');
-
-      mvm.resolve([{
-        version: 'unstable'
-      }, {
-        version: 'stable'
-      }], function(err, data) {
-        abortIfError(err);
-
-        if (!data || !data.stable || data.unstable) {
-          return abortIfError(new Error('Unknown error'));
+    async.waterfall([
+      mvm.installed.bind(null),
+      function(versions, cb) {
+        if (versions.length > 0) {
+          printVersions(versions, cb);
+          return;
         }
-
-        console.log('    m use stable; # installs MongoDB v' + data.stable.version);
-        console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
-      });
+        onNoVersionsInstalled(cb);
+      }
+    ], function(err) {
+      abortIfError(err);
+      process.exit(0);
     });
   }
 };

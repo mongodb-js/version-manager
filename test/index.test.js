@@ -1,4 +1,4 @@
-/* eslint no-sync: 0 */
+/* eslint no-sync: 0, no-console:0 */
 var mvm = require('../');
 var assert = require('assert');
 var exec = require('child_process').exec;
