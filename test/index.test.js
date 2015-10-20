@@ -14,6 +14,7 @@ debug('path to m bin is %s', M);
 debug('path to node bin is %s', NODE);
 
 var run = function(args, done) {
+  /* eslint no-sync:0 no-console:0 */
   if (typeof args === 'function') {
     done = args;
     args = '';

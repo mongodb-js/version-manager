@@ -92,11 +92,12 @@ module.exports.is = function(s, done) {
 };
 
 module.exports.current = function(fn) {
-  which('mongod', function(err, mongod_bin) {
-    if (err || !mongod_bin) {
+  which('mongod', function(err, mongodBin) {
+    /* eslint no-shadow:0 */
+    if (err || !mongodBin) {
       return fn(null);
     }
-    exec(mongod_bin + ' --version', function(err, stdout) {
+    exec(mongodBin + ' --version', function(err, stdout) {
       if (err) return fn(err);
 
       var shellVersion = stdout

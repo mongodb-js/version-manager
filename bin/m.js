@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* eslint no-sync:0 no-octal-escape:0, no-path-concat:0 */
+/* eslint no-sync:0, no-console:0, no-octal-escape:0, no-path-concat:0 */
 var fs = require('fs');
 var docopt = require('docopt').docopt;
 var pkg = require('../package.json');
@@ -39,7 +39,7 @@ var abortIfError = function(err) {
     console.error(chalk.bold.red(figures.cross),
       ' Error:', chalk.bold.red(err.message));
 
-    console.error('We apologize for this issue and welcome your bug reports.')
+    console.error('We apologize for this issue and welcome your bug reports.');
     console.error('Please visit: https://github.com/mongodb-js/version-manager/issues');
     console.error();
     console.error('Try running your command again with debugging on:');
@@ -86,6 +86,7 @@ var commands = {
     };
 
     mvm.installed(function(err, installed) {
+      /* eslint no-shadow:0 */
       abortIfError(err);
 
       mvm.available(opts, function(err, versions) {
