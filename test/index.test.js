@@ -95,7 +95,20 @@ describe('mongodb-version-manager', function() {
       });
     });
   });
-  it.skip('should install 2.6.x [#15]', function(done) {
-    run('2.6.x', done);
+  describe('functional', function() {
+    it('should install 2.6.11 [#15]', function(done) {
+      run('use 2.6.11', function(err) {
+        if(err) return done(err);
+        var dest = path.join(mvm.config.cache, 'mongodb', '2.6.11', 'bin', 'mongod');
+        fs.exists(dest, function(exists){
+          assert(exists, dest + ' does not exist');
+          done();
+        });
+      });
+    });
+    it('should update $PATH');
+    it('should have an executable shell binary');
+    it('should install 2.6.11 enterprise');
+    it('should install have 2.6.11 and a separate 2.6.11 enterprise');
   });
 });
