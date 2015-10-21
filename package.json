@@ -12,7 +12,7 @@
     "m": "bin/m.js"
   },
   "scripts": {
-    "fmt": "mongodb-js-fmt lib/*.js",
+    "fmt": "mongodb-js-fmt lib/*.js test/*.js",
     "check": "mongodb-js-precommit",
     "test": "mocha",
     "ci": "npm run check && npm run coverage",

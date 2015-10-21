@@ -98,9 +98,11 @@ describe('mongodb-version-manager', function() {
   describe('functional', function() {
     it('should install 2.6.11 [#15]', function(done) {
       run('use 2.6.11', function(err) {
-        if(err) return done(err);
+        if (err) {
+          return done(err);
+        }
         var dest = path.join(mvm.config.cache, 'mongodb', '2.6.11', 'bin', 'mongod');
-        fs.exists(dest, function(exists){
+        fs.exists(dest, function(exists) {
           assert(exists, dest + ' does not exist');
           done();
         });
