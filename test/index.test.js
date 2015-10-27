@@ -96,9 +96,9 @@ describe('mongodb-version-manager', function() {
       });
     });
   });
-  describe.skip('functional', function() {
+  describe('functional', function() {
     it('should install 2.6.11 [#15]', function(done) {
-      run('use 2.6.11', function(err) {
+      mvm.use('2.6.11', function(err) {
         if (err) {
           return done(err);
         }
