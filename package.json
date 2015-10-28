@@ -33,28 +33,29 @@
     "mocha": "~2.3.3",
     "mongodb-js-fmt": "0.0.3",
     "mongodb-js-precommit": "^0.2.2",
-    "pre-commit": "^1.1.2"
+    "pre-commit": "^1.1.2",
+    "which": "~1.2.0"
   },
   "dependencies": {
+    "ampersand-state": "^4.6.0",
     "async": "~1.5.0",
     "chalk": "^1.1.1",
     "debug": "~2.2.0",
     "docopt": "~0.6.2",
     "figures": "^1.4.0",
     "fs-extra": "~0.26.0",
+    "get-mongodb-version": "0.0.1",
     "lodash.defaults": "^3.1.2",
     "lodash.difference": "^3.2.2",
-    "mongodb-download-url": "^0.1.4",
+    "mongodb-download-url": "^0.1.6",
     "mongodb-version-list": "0.0.3",
     "progress": "~1.1.8",
     "request": "~2.65.0",
     "semver": "~5.0.3",
-    "stat-mode": "^0.2.1",
     "tar": "~2.2.1",
     "tildify": "~1.1.2",
     "untildify": "~2.1.0",
-    "unzip": "^0.1.11",
-    "which": "~1.2.0"
+    "unzip": "^0.1.11"
   },
   "license": "Apache-2.0"
 }

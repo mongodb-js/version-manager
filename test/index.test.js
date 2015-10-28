@@ -6,7 +6,6 @@ var exec = require('child_process').exec;
 var path = require('path');
 var which = require('which');
 var fs = require('fs-extra');
-var isExecutable = require('../lib/is-executable');
 var debug = require('debug')('mongodb-version-manager:test');
 
 process.env.MONGODB_VERSIONS = path.join(__dirname, '.versions');
@@ -117,15 +116,14 @@ describe('mongodb-version-manager', function() {
     var downloadedSuccessfully = function(version, platform, done) {
       var dest = path.join(
         mvm.config.cache,
-        'mongodb',
-        version,
+        ['mongodb', version, platform, '64'].join('-'),
         'bin',
         bin('mongod', platform)
       );
 
       fs.exists(dest, function(exists) {
         assert(exists, dest + ' does not exist');
-        fs.remove(mvm.config.cache, done);
+        done();
       });
     };
 
@@ -141,15 +139,10 @@ describe('mongodb-version-manager', function() {
       });
     };
 
-    var inPATH = function(version) {
-      var dest = path.join(
-        mvm.config.cache,
-        'mongodb',
-        version,
-        'bin'
-      );
+    var inPATH = function() {
+      var dest = mvm.config.CURRENT_BIN_DIRECTORY;
       if (process.env.PATH.split(path.delimiter).indexOf(dest) === -1) {
-        console.log('`%s` not in PATH: ', dest, JSON.stringify(process.env.PATH.split(path.sep), null, 2));
+        console.log('`%s` not in PATH: ', dest, JSON.stringify(process.env.PATH.split(path.delimiter), null, 2));
       }
       assert(process.env.PATH.split(path.delimiter).indexOf(dest) !== -1);
     };
@@ -171,31 +164,46 @@ describe('mongodb-version-manager', function() {
     };
 
     var shouldHaveExecutable = function(name, version, platform, done) {
-      var src = path.join(
+      var dest = path.join(
         mvm.config.cache,
-        'mongodb',
-        version,
+        ['mongodb', version, platform, '64'].join('-'),
         'bin',
         bin(name, platform)
       );
-      fs.exists(src, function(exists) {
-        if (!exists) {
-          return done(new Error('File does not exist at ' + src));
-        }
-        isExecutable(src, function(err, yep) {
-          if (err) {
-            return done(err);
-          }
 
-          assert(yep, src + ' should be executable');
-          done();
-        });
+      fs.exists(dest, function(exists) {
+        if (!exists) {
+          return done(new Error('File does not exist at ' + dest));
+        }
+        done();
+      // @todo (imlucas): Ensure `which` returns the right path.
+      // var symlink = path.join(
+      //   mvm.config.cache,
+      //   ['mongodb', 'current'].join('-'),
+      //   'bin',
+      //   bin(name, platform)
+      // );
+      // if (platform === 'windows') {
+      //   process.env.PATHEXT = '.exe';
+      // }
+      //
+      // which(name, {
+      //   all: true
+      // }, function(_err, res) {
+      //   if (platform === 'windows') {
+      //     process.env.PATHEXT = undefined;
+      //   }
+      //   if (_err) return done(_err);
+      //
+      //   assert.equal(res[0], symlink);
+      //   done();
+      // });
       });
     };
 
-    before(function(done) {
-      fs.remove(mvm.config.cache, done);
-    });
+    // afterEach(function(done) {
+    //   fs.remove(mvm.config.cache, done);
+    // });
     describe('osx', function() {
       it('should install 2.6.11 #slow', function(done) {
         this.slow(25000);
@@ -205,6 +213,10 @@ describe('mongodb-version-manager', function() {
         inPATH('current', 'osx');
       });
       it('should symlink 2.6.11 as current', function(done) {
+        if (process.platform === 'win32') {
+          this.skip();
+          return;
+        }
         shouldHaveCurrent('2.6.11', 'osx', done);
       });
       it('should have an executable shell binary', function(done) {
@@ -226,6 +238,10 @@ describe('mongodb-version-manager', function() {
         inPATH('current', 'windows');
       });
       it('should symlink 2.6.11 as current', function(done) {
+        if (process.platform !== 'win32') {
+          this.skip();
+          return;
+        }
         shouldHaveCurrent('2.6.11', 'windows', done);
       });
       it('should have an executable shell binary', function(done) {

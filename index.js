@@ -1,23 +1,21 @@
 var async = require('async');
-var which = require('which');
-var exec = require('child_process').exec;
 var fs = require('fs-extra');
-var resolve = require('mongodb-download-url');
+var path = require('path');
 var versions = require('mongodb-version-list');
 var semver = require('semver');
 var defaults = require('lodash.defaults');
-var path = require('./lib/path');
 var config = require('./lib/config');
 var activate = require('./lib/activate');
 var download = require('./lib/download');
 var extract = require('./lib/extract');
-var debug = require('debug')('mongodb-version-manager');
+var Model = require('./lib/model');
+var resolve = require('./lib/resolve');
 
-var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
+// var VERSION = /[0-9]+\.[0-9]+\.[0-9]+([-_\.][a-zA-Z0-9]+)?/;
 
-activate.addToPath(path.join(path.current(), 'bin'));
+activate.addToPath(config.CURRENT_BIN_DIRECTORY);
 
-module.exports = function(opts, fn) {
+module.exports = exports = function(opts, fn) {
   if (typeof opts === 'function') {
     fn = opts;
     opts = {};
@@ -28,39 +26,47 @@ module.exports = function(opts, fn) {
   }
   opts.version = opts.version || process.env.MONGODB_VERSION;
 
-  module.exports.use(opts, fn);
+  exports.use(opts, fn);
 };
 
-module.exports.config = config;
-module.exports.path = function(fn) {
-  fn(null, path.join(path.current({
-    name: 'mongodb'
-  }), 'bin'));
-};
+exports.resolve = function(opts, done) {
+  resolve(opts, function(err, res) {
+    if (err) return done(err);
 
-module.exports.installed = function(fn) {
-  fs.readdir(path.base({
-    name: 'mongodb'
-  }), function(err, files) {
-    files = files || [];
-    if (err) return fn(null, files);
-
-    fn(null, files.filter(function(f) {
-      return VERSION.test(f);
-    }));
+    done(null, new Model(res));
   });
 };
 
-module.exports.resolve = resolve;
+var getVersion = require('get-mongodb-version');
+exports.current = function(done) {
+  var mongod = path.join(config.CURRENT_BIN_DIRECTORY, 'mongod');
+  fs.exists(mongod, function(exists) {
+    if (!exists) return done(null, null);
 
-module.exports.available = function(opts, fn) {
+    getVersion({path: mongod}, done);
+  });
+};
+exports.config = config;
+exports.path = function(fn) {
+  fn(null, config.CURRENT_BIN_DIRECTORY);
+};
+
+exports.installed = function(fn) {
+  fs.readdir(config.ROOT_DIRECTORY, function(err, files) {
+    files = files || [];
+    if (err) return fn(null, files);
+
+    fn(null, files);
+  });
+};
+
+exports.available = function(opts, fn) {
   opts = defaults(opts || {}, {
     stable: false,
     unstable: false,
     rc: false
   });
 
-  debug('options for avilable', opts);
   versions(function(err, res) {
     if (err) return fn(err);
     res = res.map(function(v) {
@@ -83,63 +89,49 @@ module.exports.available = function(opts, fn) {
   });
 };
 
-module.exports.is = function(s, done) {
-  module.exports.current(function(err, v) {
+exports.is = function(s, done) {
+  exports.current(function(err, v) {
     if (err) return done(err);
 
     done(null, semver.satisfies(v, s));
   });
 };
 
-module.exports.current = function(fn) {
-  which('mongod', function(err, mongodBin) {
-    /* eslint no-shadow:0 */
-    if (err || !mongodBin) {
-      return fn(null);
-    }
-    exec(mongodBin + ' --version', function(err, stdout) {
-      if (err) return fn(err);
-
-      var shellVersion = stdout
-        .toString('utf-8')
-        .split('\n')[0]
-        .split(',')[0]
-        .replace('db version v', '');
-
-      fn(null, shellVersion);
-    });
-  });
-};
-
-module.exports.install = function(version, done) {
+exports.install = function(version, done) {
   resolve({
     version: version
-  }, function(err, pkg) {
+  }, function(err, model) {
     if (err) return done(err);
 
-    async.series([download.bind(null, pkg), extract.bind(null, pkg)], done);
+    async.series([
+      download.bind(null, model),
+      extract.bind(null, model)
+    ], done);
   });
 };
 
-module.exports.use = function(opts, done) {
-  resolve(opts, function(err, pkg) {
+exports.use = function(opts, done) {
+  /* eslint no-shadow:0 */
+  resolve(opts, function(err, model) {
     if (err) return done(err);
 
-    module.exports.current(function(err, v) {
-      if (err) return done(err);
+    // @todo (imlucas) Current needs to take into account
+    // enterprise, debug, platform, bits, etc.
+    // exports.current(function(err, v) {
+    //   if (err) return done(err);
+    //
+    //   if (model.version === v) {
+    //     debug('already using ' + v);
+    //     return done(null, model);
+    //   }
 
-      if (pkg.version === v) {
-        debug('already using ' + v);
-        return done(null, pkg);
-      }
-      async.series([
-        download.bind(null, pkg),
-        extract.bind(null, pkg),
-        activate.bind(null, pkg)
-      ], function(err) {
-        if (err) return done(err);
-        return done(null, pkg);
-      });
+    async.series([
+      download.bind(null, model),
+      extract.bind(null, model),
+      activate.bind(null, model)
+    ], function(err) {
+      if (err) return done(err);
+      return done(null, model);
     });
   });
 };
