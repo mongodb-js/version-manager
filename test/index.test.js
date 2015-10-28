@@ -213,7 +213,7 @@ describe('mongodb-version-manager', function() {
         inPATH('current', 'osx');
       });
       it('should symlink 2.6.11 as current', function(done) {
-        if (process.platform === 'win32') {
+        if (process.platform !== 'darwin') {
           this.skip();
           return;
         }
@@ -227,6 +227,31 @@ describe('mongodb-version-manager', function() {
       });
       it('should have an executable router binary', function(done) {
         shouldHaveExecutable('mongos', '2.6.11', 'osx', done);
+      });
+    });
+    describe('linux', function() {
+      it('should install 2.6.11 #slow', function(done) {
+        this.slow(25000);
+        use('2.6.11', 'linux', done);
+      });
+      it('should have current symlink in $PATH', function() {
+        inPATH('current', 'linux');
+      });
+      it('should symlink 2.6.11 as current', function(done) {
+        if (process.platform !== 'linux') {
+          this.skip();
+          return;
+        }
+        shouldHaveCurrent('2.6.11', 'linux', done);
+      });
+      it('should have an executable shell binary', function(done) {
+        shouldHaveExecutable('mongo', '2.6.11', 'linux', done);
+      });
+      it('should have an executable store binary', function(done) {
+        shouldHaveExecutable('mongod', '2.6.11', 'linux', done);
+      });
+      it('should have an executable router binary', function(done) {
+        shouldHaveExecutable('mongos', '2.6.11', 'linux', done);
       });
     });
     describe('windows', function() {
