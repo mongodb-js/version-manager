@@ -262,7 +262,7 @@ describe('mongodb-version-manager', function() {
       it('should have current symlink in $PATH', function() {
         inPATH('current', 'windows');
       });
-      it('should symlink 2.6.11 as current', function(done) {
+      it.skip('should symlink 2.6.11 as current', function(done) {
         if (process.platform !== 'win32') {
           this.skip();
           return;
