@@ -2,5 +2,4 @@
 .travis.yml
 test/
 .lone
-gulpfile.js
 CONTRIBUTING.md

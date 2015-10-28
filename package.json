@@ -49,6 +49,7 @@
     "progress": "~1.1.8",
     "request": "~2.65.0",
     "semver": "~5.0.3",
+    "stat-mode": "^0.2.1",
     "tar": "~2.2.1",
     "tildify": "~1.1.2",
     "untildify": "~2.1.0",

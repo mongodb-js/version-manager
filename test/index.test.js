@@ -1,11 +1,17 @@
 /* eslint no-sync: 0 */
-var mvm = require('../');
+process.env.silent = '1';
+
 var assert = require('assert');
 var exec = require('child_process').exec;
 var path = require('path');
 var which = require('which');
-var fs = require('fs');
+var fs = require('fs-extra');
+var isExecutable = require('../lib/is-executable');
 var debug = require('debug')('mongodb-version-manager:test');
+
+process.env.MONGODB_VERSIONS = path.join(__dirname, '.versions');
+
+var mvm = require('../');
 
 var M = path.resolve(__dirname, '../bin/m.js');
 var NODE = which.sync('node');
@@ -96,22 +102,150 @@ describe('mongodb-version-manager', function() {
       });
     });
   });
+  describe('config', function() {
+    it('should use the right directory', function() {
+      assert.equal(mvm.config.cache, path.join(__dirname, '.versions'));
+    });
+  });
   describe('functional', function() {
-    it('should install 2.6.11 [#15]', function(done) {
-      mvm.use('2.6.11', function(err) {
+    function bin(name, platform) {
+      if (platform !== 'windows') {
+        return name;
+      }
+      return name + '.exe';
+    }
+    var downloadedSuccessfully = function(version, platform, done) {
+      var dest = path.join(
+        mvm.config.cache,
+        'mongodb',
+        version,
+        'bin',
+        bin('mongod', platform)
+      );
+
+      fs.exists(dest, function(exists) {
+        assert(exists, dest + ' does not exist');
+        fs.remove(mvm.config.cache, done);
+      });
+    };
+
+    var use = function(version, platform, done) {
+      mvm.use({
+        version: version,
+        platform: platform
+      }, function(err) {
         if (err) {
           return done(err);
         }
-        var dest = path.join(mvm.config.cache, 'mongodb', '2.6.11', 'bin', 'mongod');
-        fs.exists(dest, function(exists) {
-          assert(exists, dest + ' does not exist');
+        downloadedSuccessfully(version, platform, done);
+      });
+    };
+
+    var inPATH = function(version) {
+      var dest = path.join(
+        mvm.config.cache,
+        'mongodb',
+        version,
+        'bin'
+      );
+      if (process.env.PATH.split(path.delimiter).indexOf(dest) === -1) {
+        console.log('`%s` not in PATH: ', dest, JSON.stringify(process.env.PATH.split(path.sep), null, 2));
+      }
+      assert(process.env.PATH.split(path.delimiter).indexOf(dest) !== -1);
+    };
+
+    var shouldHaveCurrent = function(version, platform, done) {
+      if (platform === 'windows') {
+        process.env.PATHEXT = '.exe';
+      }
+      mvm.current(function(err, v) {
+        if (platform === 'windows') {
+          process.env.PATHEXT = undefined;
+        }
+        if (err) {
+          return done(err);
+        }
+        assert.equal(version, v);
+        done();
+      });
+    };
+
+    var shouldHaveExecutable = function(name, version, platform, done) {
+      var src = path.join(
+        mvm.config.cache,
+        'mongodb',
+        version,
+        'bin',
+        bin(name, platform)
+      );
+      fs.exists(src, function(exists) {
+        if (!exists) {
+          return done(new Error('File does not exist at ' + src));
+        }
+        isExecutable(src, function(err, yep) {
+          if (err) {
+            return done(err);
+          }
+
+          assert(yep, src + ' should be executable');
           done();
         });
       });
+    };
+
+    before(function(done) {
+      fs.remove(mvm.config.cache, done);
     });
-    it('should update $PATH');
-    it('should have an executable shell binary');
-    it('should install 2.6.11 enterprise');
-    it('should install have 2.6.11 and a separate 2.6.11 enterprise');
+    describe('osx', function() {
+      it('should install 2.6.11 #slow', function(done) {
+        this.slow(25000);
+        use('2.6.11', 'osx', done);
+      });
+      it('should have current symlink in $PATH', function() {
+        inPATH('current', 'osx');
+      });
+      it('should symlink 2.6.11 as current', function(done) {
+        shouldHaveCurrent('2.6.11', 'osx', done);
+      });
+      it('should have an executable shell binary', function(done) {
+        shouldHaveExecutable('mongo', '2.6.11', 'osx', done);
+      });
+      it('should have an executable store binary', function(done) {
+        shouldHaveExecutable('mongod', '2.6.11', 'osx', done);
+      });
+      it('should have an executable router binary', function(done) {
+        shouldHaveExecutable('mongos', '2.6.11', 'osx', done);
+      });
+    });
+    describe('windows', function() {
+      it('should install 2.6.11 [#15] #slow', function(done) {
+        this.slow(25000);
+        use('2.6.11', 'windows', done);
+      });
+      it('should have current symlink in $PATH', function() {
+        inPATH('current', 'windows');
+      });
+      it('should symlink 2.6.11 as current', function(done) {
+        shouldHaveCurrent('2.6.11', 'windows', done);
+      });
+      it('should have an executable shell binary', function(done) {
+        shouldHaveExecutable('mongo', '2.6.11', 'windows', done);
+      });
+      it('should have an executable store binary', function(done) {
+        shouldHaveExecutable('mongod', '2.6.11', 'windows', done);
+      });
+      it('should have an executable router binary', function(done) {
+        shouldHaveExecutable('mongos', '2.6.11', 'windows', done);
+      });
+    });
+
+    describe('enterprise', function() {
+      it('should install 2.6.11 enterprise');
+      it('should install have 2.6.11 and a separate 2.6.11 enterprise');
+    });
+    describe('debug', function() {
+      it('should install 2.6.11 debug');
+      it('should install have 2.6.11 and a separate 2.6.11 debug');
+    });
   });
 });
