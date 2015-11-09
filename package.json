@@ -47,7 +47,7 @@
     "get-mongodb-version": "0.0.1",
     "lodash.defaults": "^3.1.2",
     "lodash.difference": "^3.2.2",
-    "mongodb-download-url": "^0.1.7",
+    "mongodb-download-url": "^0.1.8",
     "mongodb-version-list": "0.0.3",
     "progress": "~1.1.8",
     "request": "~2.65.0",
