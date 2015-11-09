@@ -43,7 +43,7 @@
     "debug": "~2.2.0",
     "docopt": "~0.6.2",
     "figures": "^1.4.0",
-    "fs-extra": "~0.26.0",
+    "fs-extra": "~0.26.2",
     "get-mongodb-version": "0.0.1",
     "lodash.defaults": "^3.1.2",
     "lodash.difference": "^3.2.2",
