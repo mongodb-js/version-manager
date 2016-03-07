@@ -16,7 +16,7 @@
     "check": "mongodb-js-precommit",
     "test": "mocha",
     "ci": "npm run check && npm run coverage",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover _mocha -- -R spec ./test/*.test.js"
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./test/*.test.js"
   },
   "check": {
     "ignore": [
