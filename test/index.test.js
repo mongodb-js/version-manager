@@ -2,7 +2,7 @@
 process.env.silent = '1';
 
 var assert = require('assert');
-var exec = require('child_process').exec;
+var execFile = require('child_process').execFile;
 var path = require('path');
 var which = require('which');
 var fs = require('fs-extra');
@@ -18,30 +18,31 @@ var NODE = which.sync('node');
 debug('path to m bin is %s', M);
 debug('path to node bin is %s', NODE);
 
-var run = function(args, done) {
+var run = function(command, done) {
   /* eslint no-sync:0 no-console:0 */
-  if (typeof args === 'function') {
-    done = args;
-    args = '';
+  if (typeof command === 'function') {
+    done = command;
+    command = '';
   }
 
-  var cmd = '"' + NODE + '" ' + M + ' ' + args;
-  debug('running `%s`', cmd);
+  var args = [M, command];
+  var debugCmd = '"' + NODE + '" ' + args;
+  debug('running `%s`', debugCmd);
   assert(fs.existsSync(M), M + ' does not exist');
   assert(fs.existsSync(NODE), NODE + ' does not exist');
 
-  exec(cmd, function(err, stdout, stderr) {
-    debug('result of `%s`', cmd, JSON.stringify({
+  execFile(NODE, args, function(err, stdout, stderr) {
+    debug('result of `%s`', debugCmd, JSON.stringify({
       stdout: stdout.toString('utf-8'),
       stderr: stderr.toString('utf-8')
     }, null, 2));
 
     if (err) {
-      debug('failed to run `%s`', cmd);
+      debug('failed to run `%s`', debugCmd);
       console.error('exec failed: ', err);
       return done(err);
     }
-    debug('completed successfully `%s`', cmd);
+    debug('completed successfully `%s`', debugCmd);
     done();
   });
 };
