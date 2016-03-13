@@ -7,9 +7,9 @@ Download and install the current unstable and two previous stable releases:
 ```shell
 npm install -g mongodb-version-manager
 export PATH="`m path`:$PATH"
-m 3.0.x && npm test && mongod --version
-m 2.6.x && npm test && mongod --version
-m 2.4.x && npm test && mongod --version
+m use 3.0.x && npm test && mongod --version
+m use 2.6.x && npm test && mongod --version
+m use 2.4.x && npm test && mongod --version
 ```
 
 ## TravisCI Automation
