@@ -1,6 +1,6 @@
 {
   "name": "mongodb-version-manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Cross-platform helper for managing and installing MongoDB",
   "repository": {
     "type": "git",
