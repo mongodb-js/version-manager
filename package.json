@@ -50,6 +50,7 @@
     "lodash.difference": "^4.1.1",
     "mongodb-download-url": "^0.1.9",
     "mongodb-version-list": "0.0.3",
+    "nugget": "^2.0.0",
     "progress": "~1.1.8",
     "request": "~2.69.0",
     "semver": "~5.1.0",
