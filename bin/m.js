@@ -4,8 +4,13 @@
 var fs = require('fs');
 var docopt = require('docopt').docopt;
 var pkg = require('../package.json');
-var argv = docopt(fs.readFileSync(__dirname + '/m.docopt', 'utf-8'), {
-  version: pkg.version
+var path = require('path');
+
+var docoptString = fs.readFileSync(path.join(__dirname, 'm.docopt'), 'utf-8');
+docoptString = docoptString.replace(/[\r]/g, '');
+var argv = docopt(docoptString, {
+  version: pkg.version,
+  exit: false
 });
 
 if (argv['--debug']) {
