@@ -3,8 +3,8 @@ m
 The MongoDB version manager.
 
 Usage:
-  m use <version> [--branch=<branch> --distro=<distro>]
-  m url <version> [--branch=<branch> --distro=<distro>]
+  m use <version> [--branch=<branch> --distro=<distro> --enterprise]
+  m url <version> [--branch=<branch> --distro=<distro> --enterprise]
   m available [--stable --unstable --rc --pokemon]
   m path
 
@@ -24,3 +24,4 @@ Options:
   --unstable    Only list available unstable versions.
   --rc          Include release candidates in available versions.
   --pokemon     Show all available versions you do not have installed so you can collect all the MongoDB's.
+  --enterprise  Use MongoDB enterprise.

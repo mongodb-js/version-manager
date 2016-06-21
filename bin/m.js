@@ -159,7 +159,8 @@ var commands = {
 var opts = {
   version: argv['<version>'],
   branch: argv['--branch'],
-  distro: argv['--distro']
+  distro: argv['--distro'],
+  enterprise: argv['--enterprise']
 };
 
 cmd = Object.keys(commands)
