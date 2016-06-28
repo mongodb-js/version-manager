@@ -51,7 +51,7 @@
     "mongodb-download-url": "^0.1.10",
     "mongodb-version-list": "0.0.3",
     "nugget": "^2.0.0",
-    "semver": "~5.1.0",
+    "semver": "~5.2.0",
     "tar": "~2.2.1",
     "tildify": "~1.2.0",
     "untildify": "~2.1.0",
