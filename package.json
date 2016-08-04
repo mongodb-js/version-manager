@@ -31,7 +31,7 @@
     "eslint-config-mongodb-js": "^2.0.0",
     "istanbul": "^0.4.0",
     "lodash.defaults": "^4.0.1",
-    "mocha": "~2.5.3",
+    "mocha": "~3.0.1",
     "mongodb-js-fmt": "0.0.3",
     "mongodb-js-precommit": "^0.2.8",
     "pre-commit": "^1.1.2",
