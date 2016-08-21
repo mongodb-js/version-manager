@@ -28,7 +28,7 @@
   ],
   "devDependencies": {
     "coveralls": "^2.11.4",
-    "eslint-config-mongodb-js": "^2.0.0",
+    "eslint-config-mongodb-js": "^2.1.0",
     "istanbul": "^0.4.0",
     "lodash.defaults": "^4.0.1",
     "mocha": "~2.5.3",
