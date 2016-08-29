@@ -47,7 +47,7 @@
     "fs-extra": "~0.30.0",
     "get-mongodb-version": "0.0.1",
     "lodash.defaults": "^3.1.2",
-    "lodash.difference": "^4.1.1",
+    "lodash.difference": "^4.5.0",
     "mongodb-download-url": "^0.1.10",
     "mongodb-version-list": "0.0.3",
     "nugget": "^2.0.0",
