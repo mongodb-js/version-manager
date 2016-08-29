@@ -54,7 +54,7 @@
     "semver": "~5.3.0",
     "tar": "~2.2.1",
     "tildify": "~1.2.0",
-    "untildify": "~2.1.0",
+    "untildify": "~3.0.2",
     "unzip": "^0.1.11"
   },
   "license": "Apache-2.0"
