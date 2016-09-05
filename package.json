@@ -35,7 +35,7 @@
     "mongodb-js-fmt": "0.0.3",
     "mongodb-js-precommit": "^0.2.9",
     "pre-commit": "^1.1.2",
-    "which": "~1.2.0"
+    "which": "~1.2.11"
   },
   "dependencies": {
     "ampersand-state": "^5.0.1",
