@@ -49,6 +49,28 @@ var run = function(command, done) {
 
 describe('mongodb-version-manager', function() {
   describe('bin', function() {
+    it('should return 1 and print usage if i run `m`', function(done) {
+      var expectStdout = [
+        'Usage:',
+        '  m use <version> [--branch=<branch> --distro=<distro> --enterprise]',
+        '  m url <version> [--branch=<branch> --distro=<distro> --enterprise]',
+        '  m available [--stable --unstable --rc --pokemon]',
+        '  m path',
+        ''
+      ].join('\n');
+      execFile(NODE, [M], function(err, stdout, stderr) {
+        // DocOpt returns 1 instead of 0, so allow this as it's only useful
+        // in that it prints the Usage message like `m --help`
+        assert.strictEqual(err.code, 1);
+        assert.strictEqual(stdout.toString('utf-8'), expectStdout);
+
+        // Printing the error stack trace suggests something is wrong to a
+        // new user, when nothing is, so we shouldn't see anything on stderr
+        assert.strictEqual(stderr.toString('utf-8'), '');
+      });
+      done();
+    });
+
     it('should work if i run `m available`', function(done) {
       run('available', done);
     });
