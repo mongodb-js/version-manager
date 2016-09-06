@@ -13,7 +13,9 @@ Great to have you here. These are a few ways you can help make this project bett
 ## Workflow
 
 1. Fork the repository on GitHub
+1. Clone the repository to your local machine
 1. Create a branch with a name that briefly describes your feature
+1. Install dependencies `npm install`
 1. Implement your feature or bug fix
 1. Add new cases to `./tests.js` that verify your bug fix or make sure no one
    unintentionally breaks your feature in the future and run them with `npm test`
