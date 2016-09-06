@@ -12,6 +12,7 @@ npm install -g mongodb-version-manager
 
 ```sh
 $ m
+Usage:
   m use <version> [--branch=<branch> --distro=<distro> --enterprise]
   m url <version> [--branch=<branch> --distro=<distro> --enterprise]
   m available [--stable --unstable --rc --pokemon]
