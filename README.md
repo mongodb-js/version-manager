@@ -2,6 +2,22 @@
 
 > Install and manage multiple versions of MongoDB.
 
+## Install
+
+```sh
+npm install -g mongodb-version-manager
+```
+
+## Usage
+
+```sh
+$ m
+  m use <version> [--branch=<branch> --distro=<distro> --enterprise]
+  m url <version> [--branch=<branch> --distro=<distro> --enterprise]
+  m available [--stable --unstable --rc --pokemon]
+  m path
+```
+
 ## License
 
 Apache 2.0
