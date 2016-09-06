@@ -9,8 +9,7 @@ var path = require('path');
 var docoptString = fs.readFileSync(path.join(__dirname, 'm.docopt'), 'utf-8');
 docoptString = docoptString.replace(/[\r]/g, '');
 var argv = docopt(docoptString, {
-  version: pkg.version,
-  exit: false
+  version: pkg.version
 });
 
 if (argv['--debug']) {
