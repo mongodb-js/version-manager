@@ -10,6 +10,8 @@ Usage:
 
 Examples:
   m use <version>                # Install or activate MongoDB <version>
+  m use latest                   # Install or activate latest MongoDB release
+  m use stable                   # Install or activate stable MongoDB release
   m path                         # Print the absolute path to the current MongoDB version
   m available                    # List all available versions
   m url stable                   # Print download URL for the latest stable version
