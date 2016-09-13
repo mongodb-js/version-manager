@@ -70,6 +70,16 @@ describe('mongodb-version-manager', function() {
       });
       done();
     });
+    it('should limit stdout to 80 characters for `m --help`', function(done) {
+      execFile(NODE, [M, '--help'], function(err, stdout, stderr) {
+        assert.strictEqual(err, null);
+        stdout.toString('utf-8').split('\n').forEach(function(line) {
+          assert(line.length <= 80);
+        });
+        assert.strictEqual(stderr.toString('utf-8'), '');
+      });
+      done();
+    });
 
     it('should work if i run `m available`', function(done) {
       run('available', done);
