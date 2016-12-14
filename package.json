@@ -41,7 +41,7 @@
     "ampersand-state": "^5.0.1",
     "async": "^2.1.2",
     "chalk": "^1.1.1",
-    "debug": "^2.3.2",
+    "debug": "^2.4.3",
     "docopt": "^0.6.2",
     "figures": "^2.0.0",
     "fs-extra": "^1.0.0",
