@@ -1,6 +1,6 @@
 {
   "name": "mongodb-version-manager",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "Install and manage multiple versions of MongoDB",
   "repository": {
     "type": "git",
@@ -16,13 +16,16 @@
     "check": "mongodb-js-precommit",
     "test": "DEBUG=mon* mocha",
     "ci": "npm run check && npm run coverage",
-    "coverage":
-      "istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./test/*.test.js"
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./test/*.test.js"
   },
   "check": {
-    "ignore": ["coverage/{*,**/*}"]
+    "ignore": [
+      "coverage/{*,**/*}"
+    ]
   },
-  "precommit": ["check"],
+  "precommit": [
+    "check"
+  ],
   "devDependencies": {
     "coveralls": "^2.11.4",
     "eslint-config-mongodb-js": "^2.2.0",
