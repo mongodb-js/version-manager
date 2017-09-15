@@ -43,6 +43,7 @@
     "chalk": "^2.1.0",
     "debug": "^3.0.1",
     "docopt": "^0.6.2",
+    "download": "^6.2.5",
     "figures": "^2.0.0",
     "fs-extra": "^4.0.2",
     "get-mongodb-version": "^1.0.0",
@@ -50,9 +51,7 @@
     "lodash.difference": "^4.1.1",
     "mongodb-download-url": "^0.3.0",
     "mongodb-version-list": "^1.0.0",
-    "nugget": "^2.0.0",
     "semver": "^5.3.0",
-    "tar": "^2.2.1",
     "tildify": "^1.2.0",
     "untildify": "^3.0.2",
     "unzip": "^0.1.11"

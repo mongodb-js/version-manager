@@ -7,7 +7,6 @@ var defaults = require('lodash.defaults');
 var config = require('./lib/config');
 var activate = require('./lib/activate');
 var download = require('./lib/download');
-var extract = require('./lib/extract');
 var Model = require('./lib/model');
 var resolve = require('./lib/resolve');
 
@@ -103,10 +102,7 @@ exports.install = function(version, done) {
   }, function(err, model) {
     if (err) return done(err);
 
-    async.series([
-      download.bind(null, model),
-      extract.bind(null, model)
-    ], done);
+    download(model, done);
   });
 };
 
@@ -127,7 +123,6 @@ exports.use = function(opts, done) {
 
     async.series([
       download.bind(null, model),
-      extract.bind(null, model),
       activate.bind(null, model)
     ], function(err) {
       if (err) return done(err);
