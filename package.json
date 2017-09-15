@@ -14,18 +14,15 @@
   "scripts": {
     "fmt": "mongodb-js-fmt lib/*.js test/*.js",
     "check": "mongodb-js-precommit",
-    "test": "mocha",
+    "test": "DEBUG=mon* mocha",
     "ci": "npm run check && npm run coverage",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./test/*.test.js"
+    "coverage":
+      "istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./test/*.test.js"
   },
   "check": {
-    "ignore": [
-      "coverage/{*,**/*}"
-    ]
+    "ignore": ["coverage/{*,**/*}"]
   },
-  "precommit": [
-    "check"
-  ],
+  "precommit": ["check"],
   "devDependencies": {
     "coveralls": "^2.11.4",
     "eslint-config-mongodb-js": "^2.2.0",
