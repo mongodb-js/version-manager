@@ -19,6 +19,12 @@ Usage:
   m path
 ```
 
+Once you've installed your first version of mongo with the `m use` command, update your `~/.bashrc` file:
+
+```sh
+export PATH="$HOME/.mongodb/versions/mongodb-current/bin:$PATH"
+```
+
 ## License
 
 Apache 2.0
