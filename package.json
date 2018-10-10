@@ -49,7 +49,7 @@
     "get-mongodb-version": "^1.0.0",
     "lodash.defaults": "^4.2.0",
     "lodash.difference": "^4.1.1",
-    "mongodb-download-url": "^0.3.3",
+    "mongodb-download-url": "^0.4.0",
     "mongodb-version-list": "^1.0.0",
     "semver": "^5.3.0",
     "tildify": "^1.2.0",
