@@ -27,12 +27,16 @@ function printVersions(versions, fn) {
   mvm.current(function(err, current) {
     if (err) return fn(err);
 
-    console.log(versions.map(function(v) {
-      if (v === current) {
-        return ' \033[32mο ' + v + '\033[0m \033[90m \033[0m';
-      }
-      return '   ' + v + '\033[90m \033[0m';
-    }).join('\n'));
+    console.log(
+      versions
+        .map(function(v) {
+          if (v === current) {
+            return ' \033[32mο ' + v + '\033[0m \033[90m \033[0m';
+          }
+          return '   ' + v + '\033[90m \033[0m';
+        })
+        .join('\n')
+    );
 
     fn();
   });
@@ -40,11 +44,16 @@ function printVersions(versions, fn) {
 
 var abortIfError = function(err) {
   if (err) {
-    console.error(chalk.bold.red(figures.cross),
-      ' Error:', chalk.bold.red(err.message));
+    console.error(
+      chalk.bold.red(figures.cross),
+      ' Error:',
+      chalk.bold.red(err.message)
+    );
 
     console.error('We apologize for this issue and welcome your bug reports.');
-    console.error('Please visit: https://github.com/mongodb-js/version-manager/issues');
+    console.error(
+      'Please visit: https://github.com/mongodb-js/version-manager/issues'
+    );
     console.error();
     console.error('Try running your command again with debugging on:');
     console.error('   m ' + cmd + ' --debug');
@@ -84,11 +93,16 @@ var commands = {
       title = includes.join('|');
     }
 
+    if (argv['<range>']) {
+      title = 'All versions matching ' + argv['<range>'];
+    }
+    
     var opts = {
       stable: argv['--stable'],
       unstable: argv['--unstable'],
       rc: argv['--rc'],
-      pokemon: argv['--pokemon']
+      pokemon: argv['--pokemon'],
+      range: argv['<range>']
     };
 
     mvm.installed(function(err, installed) {
@@ -103,7 +117,7 @@ var commands = {
         }
 
         if (opts.pokemon) {
-          console.log(title + ' versions you haven\'t installed yet:');
+          console.log(title + " versions you haven't installed yet:");
           versions = difference(versions, installed);
         }
         printVersions(versions, function(err) {
@@ -139,20 +153,30 @@ var commands = {
 
       console.log('0 versions installed.  Run one of:');
 
-      mvm.resolve([{
-        version: 'unstable'
-      }, {
-        version: 'stable'
-      }], function(err, data) {
-        abortIfError(err);
+      mvm.resolve(
+        [
+          {
+            version: 'unstable'
+          },
+          {
+            version: 'stable'
+          }
+        ],
+        function(err, data) {
+          abortIfError(err);
 
-        if (!data || !data.stable || data.unstable) {
-          return abortIfError(new Error('Unknown error'));
+          if (!data || !data.stable || data.unstable) {
+            return abortIfError(new Error('Unknown error'));
+          }
+
+          console.log(
+            '    m use stable; # installs MongoDB v' + data.stable.version
+          );
+          console.log(
+            '    m use unstable; # installs MongoDB v' + data.unstable.version
+          );
         }
-
-        console.log('    m use stable; # installs MongoDB v' + data.stable.version);
-        console.log('    m use unstable; # installs MongoDB v' + data.unstable.version);
-      });
+      );
     });
   }
 };
@@ -161,17 +185,18 @@ var opts = {
   version: argv['<version>'],
   branch: argv['--branch'],
   distro: argv['--distro'],
-  enterprise: argv['--enterprise']
+  enterprise: argv['--enterprise'],
+  range: argv['<range>']
 };
 
-cmd = Object.keys(commands)
-  .filter(function(name) {
-    return argv[name] === true;
-  })[0];
+cmd = Object.keys(commands).filter(function(name) {
+  return argv[name] === true;
+})[0];
 
 if (!cmd) {
   cmd = argv['<version>'] ? 'use' : 'list';
 }
+
 debug('cmd is `%s` with opts `%j`', cmd, opts);
 
 commands[cmd](opts);

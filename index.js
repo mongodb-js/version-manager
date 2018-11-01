@@ -63,7 +63,8 @@ exports.available = function(opts, fn) {
   opts = defaults(opts || {}, {
     stable: false,
     unstable: false,
-    rc: false
+    rc: false,
+    range: undefined
   });
 
   versions(function(err, res) {
@@ -72,6 +73,10 @@ exports.available = function(opts, fn) {
       return semver.parse(v);
     })
       .filter(function(v) {
+        if (opts.range) {
+          return semver.satisfies(v.version, opts.range);
+        }
+
         v.stable = v.minor % 2 === 0;
         v.unstable = !v.stable;
         v.rc = v.prerelease.length > 0;
