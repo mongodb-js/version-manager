@@ -55,6 +55,7 @@ describe('mongodb-version-manager', function() {
         '  m use <version> [--branch=<branch> --distro=<distro> --enterprise]',
         '  m url <version> [--branch=<branch> --distro=<distro> --enterprise]',
         '  m available [--stable --unstable --rc --pokemon]',
+        '  m available <range>',
         '  m list',
         '  m path',
         ''
