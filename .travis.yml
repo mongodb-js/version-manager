@@ -1,8 +1,12 @@
 sudo: false
 language: node_js
 node_js:
+  - 10.2.1
   - 8
-script: npm run-script ci
+before_install:
+  - npm i -g npm
+script:
+  - npm test
 cache:
   directories:
-    - node_modules
+    - '$HOME/.npm'
