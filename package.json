@@ -1,6 +1,6 @@
 {
   "name": "mongodb-version-manager",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Install and manage multiple versions of MongoDB",
   "repository": {
     "type": "git",
