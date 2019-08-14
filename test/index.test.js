@@ -18,6 +18,13 @@ var NODE = which.sync('node');
 debug('path to m bin is %s', M);
 debug('path to node bin is %s', NODE);
 
+var skipIfNotLinux = function(runner) {
+  if (process.platform !== 'linux') {
+    runner.skip();
+    return;
+  }
+};
+
 var run = function(command, done) {
   /* eslint no-sync:0 no-console:0 */
   if (typeof command === 'function') {
@@ -266,26 +273,28 @@ describe('mongodb-version-manager', function() {
     });
     describe('linux', function() {
       it('should install 2.6.11 #slow', function(done) {
+        skipIfNotLinux(this);
         this.slow(25000);
         use('2.6.11', 'linux', done);
       });
       it('should have current symlink in $PATH', function() {
+        skipIfNotLinux(this);
         inPATH('current', 'linux');
       });
       it('should symlink 2.6.11 as current', function(done) {
-        if (process.platform !== 'linux') {
-          this.skip();
-          return;
-        }
+        skipIfNotLinux(this);
         shouldHaveCurrent('2.6.11', 'linux', done);
       });
       it('should have an executable shell binary', function(done) {
+        skipIfNotLinux(this);
         shouldHaveExecutable('mongo', '2.6.11', 'linux', done);
       });
       it('should have an executable store binary', function(done) {
+        skipIfNotLinux(this);
         shouldHaveExecutable('mongod', '2.6.11', 'linux', done);
       });
       it('should have an executable router binary', function(done) {
+        skipIfNotLinux(this);
         shouldHaveExecutable('mongos', '2.6.11', 'linux', done);
       });
     });
