@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
-    "lodash.defaults": "^4.0.1",
     "mocha": "^5.2.0",
     "which": "^1.2.0"
   },
