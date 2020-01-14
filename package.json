@@ -15,7 +15,7 @@
     "test": "cross-env DEBUG=mon* mocha"
   },
   "devDependencies": {
-    "cross-env": "^5.2.0",
+    "cross-env": "^6.0.3",
     "mocha": "^5.2.0",
     "which": "^1.2.0"
   },
