@@ -34,7 +34,7 @@
     "mongodb-download-url": "^0.5.2",
     "mongodb-version-list": "^1.0.0",
     "semver": "^5.3.0",
-    "tildify": "^1.2.0",
+    "tildify": "^2.0.0",
     "untildify": "^3.0.2"
   },
   "license": "Apache-2.0"
