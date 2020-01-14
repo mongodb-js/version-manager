@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
-    "mocha": "^5.2.0",
+    "mocha": "^7.0.0",
     "which": "^1.2.0"
   },
   "dependencies": {
