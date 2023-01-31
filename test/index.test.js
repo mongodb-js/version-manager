@@ -90,7 +90,9 @@ describe('mongodb-version-manager', function() {
       done();
     });
 
-    it('should work if i run `m available`', function(done) {
+    // This command doesn't work anymore because it relies on the page layout of
+    // the mongodb downloads page
+    it.skip('should work if i run `m available`', function(done) {
       run('available', done);
     });
 
